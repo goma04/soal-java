@@ -1,0 +1,12 @@
+namespace metadslx.languages.soal;
+generator WsdlGenerator for Object;
+
+using generator XsdGenerator;
+
+properties Properties
+	boolean SingleFileWsdl = false;
+	boolean SeparateXsdWsdl = false;
+end properties
+
+template generate(Namespace ns)
+end template

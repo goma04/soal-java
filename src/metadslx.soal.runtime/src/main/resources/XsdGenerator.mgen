@@ -1,0 +1,9 @@
+namespace metadslx.languages.soal;
+generator XsdGenerator for Object;
+
+properties Properties
+	boolean ImportXsd = true;
+end properties
+
+template generate(Namespace ns)
+end template
