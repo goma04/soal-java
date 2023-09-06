@@ -14,22 +14,26 @@ In Eclipse, right click on the **Main.xtend** inside the **soal.compiler** proje
 
 In this **Run configuration** open the **Arguments** tab, and fill the **Program arguments**.
 
-Use the following arguments, to generate documentation:
+Use the following arguments to generate documentation:
 ```
 documentation -i input/helloworld -o output
 ```
 
-Use the following arguments, to generate WSDL or OpenApi descriptors:
+Use the following arguments to generate WSDL or OpenApi descriptors:
 ```
 interface -i input/helloworld -o output
 ```
 
-Use the following arguments, to generate Spring Boot client and server skeleton:
+Use the following arguments to generate Spring Boot client and server skeleton:
 ```
 implementation -i input/helloworld -o output
 ```
 
 ## Running the SOAL editor
 
-In Eclipse, right click on the project **soal.dsl** and select **Run as > Eclipse application**. A new Eclipse will be opened. Create a new project (**General > Project**) called **soal.example**, add a new folder called **hello** to this project, and create a new file called **HelloWorld.soal** under this folder. (Make sure to allow Eclipse to convert the project to an Xtext project. You can also do this manually by right clicking the **soal.example** project and selecting **Configure > Convert to Xtext project**.)
+In Eclipse, right click on the project **soal.dsl** and select **Run as > Eclipse application**. A new Eclipse will be opened.
+
+Create a new project (**General > Project**) called **soal.example**, add a new folder called **hello** to this project, and create a new file called **HelloWorld.soal** under this folder. Now you can edit the **HelloWorld.soal** file. The HTML documentation and the WSDL and OpenApi interface descriptors will be generated automatically into the project under the **src-gen** folder.
+
+(Make sure to allow Eclipse to convert the **soal.dsl** project to an Xtext project. You can also do this manually by right clicking the **soal.example** project and selecting **Configure > Convert to Xtext project**.)
 
