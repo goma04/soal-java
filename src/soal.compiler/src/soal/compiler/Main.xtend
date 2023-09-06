@@ -71,7 +71,7 @@ class Main {
 
     static def printUsage() {
         println("Usage:")
-        println("  soalc <target> [-i <inputdir>] [-o <outputdir>]")
+        println("  Main <target> [-i <inputdir>] [-o <outputdir>]")
         println("")
         println("Where:")
         println("  target='interface' or 'implementation' or 'documentation'")
