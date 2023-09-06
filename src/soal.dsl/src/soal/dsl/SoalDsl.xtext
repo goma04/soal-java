@@ -1,0 +1,101 @@
+grammar soal.dsl.SoalDsl with org.eclipse.xtext.common.Terminals
+
+import "soal.model"
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+SoalModel:
+    'description' name=ID';' ('import' imports+=[SoalModel|STRING]';')* declarations+=Declaration*;
+
+Declaration:
+    EnumDeclaration | StructDeclaration | InterfaceDeclaration | ServiceDeclaration;
+
+EnumDeclaration returns EnumType:
+    'enum' name=ID '{' (literals+=EnumLiteral (',' literals+=EnumLiteral)*)? '}'
+;
+
+EnumLiteral:
+    name=ID
+;
+
+StructDeclaration returns StructType:
+    'struct' name=ID (':' baseType=[StructType])? '{' fields+=FieldDeclaration* '}'
+;
+
+FieldDeclaration returns Property:
+    typeReference=TypeReference name=ID ';'
+;
+
+
+InterfaceDeclaration returns Interface:
+    'interface' name=ID '{' resources+=ResourceDeclaration* operations+=OperationDeclaration* '}'
+;
+
+ResourceDeclaration returns Resource:
+    readonly?='readonly'? 'resource' entity=[StructType] ('throws' exceptions+=[StructType] (',' exceptions+=[StructType])*)? ';'
+;
+
+OperationDeclaration returns Operation:
+    async?='async'? responseParameters=OutputParameterList name=ID requestParameters=InputParameterList ('throws' exceptions+=[StructType] (',' exceptions+=[StructType])*)? ';'
+;
+
+InputParameterList returns ParameterList:
+    {ParameterList} '(' (parameters+=Parameter (',' parameters+=Parameter)*)? ')'
+;
+
+OutputParameterList returns ParameterList:
+    {ParameterList} 'void' |
+    {ParameterList} parameters+=SingleReturnParameter |
+    '(' parameters+=Parameter (',' parameters+=Parameter)* ')'
+;
+
+Parameter:
+    typeReference=TypeReference name=ID
+;
+
+SingleReturnParameter returns Parameter:
+    typeReference=TypeReference
+;
+
+ServiceDeclaration returns Service:
+    'service' name=ID ':' interface=[Interface] '{' 'binding' binding=(RestBindingKind|SoapBindingKind) ';' '}'
+;
+
+enum RestBindingKind returns BindingKind:
+    REST='REST'
+;
+
+enum SoapBindingKind returns BindingKind:
+    SOAP='SOAP'
+;
+
+TypeReference:
+    ArrayType | NullableType | SimpleTypeReference
+;
+
+ArrayType:
+    {ReferenceArrayType} innerType=[Type|SimpleTypeName] '[' ']' |
+    {ContainmentArrayType} innerType=NullableType '[' ']'
+;
+
+NullableType:
+    innerType=[Type|SimpleTypeName] '?'
+;
+
+SimpleTypeReference:
+    referencedType=[Type|SimpleTypeName]
+;
+
+SimpleTypeName returns ecore::EString:
+    'object' | 'binary' | 'bool' | 'string' | 'int' | 'long' | 'float' | 'double' | 'date' | 'time' | 'datetime' | 'duration' | QualifiedName
+;
+
+QualifiedName returns ecore::EString : ID ('.' ID)*;
+
+EString returns ecore::EString:
+    STRING;
+
+EInt returns ecore::EInt:
+     INT;
+
+EBoolean returns ecore::EBoolean:
+    'true' | 'false';

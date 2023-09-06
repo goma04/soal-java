@@ -1,0 +1,291 @@
+@GenModel(codeFormatting="true", commentFormatting="true", modelName="SoalModel", prefix="SoalModel")
+package soal.model
+
+type RootSoalModel wraps RootSoalModel
+
+enum OperationKind
+{
+    RPC,
+    GET_ALL,
+    GET,
+    INSERT,
+    UPDATE,
+    DELETE
+}
+
+class GlobalSoalModel
+{
+    contains BuiltInType errorType
+    contains BuiltInType anyType
+    contains BuiltInType voidType
+    contains BuiltInType objectType
+    contains BuiltInType binaryType
+    contains BuiltInType boolType
+    contains BuiltInType stringType
+    contains BuiltInType intType
+    contains BuiltInType longType
+    contains BuiltInType floatType
+    contains BuiltInType doubleType
+    contains BuiltInType dateType
+    contains BuiltInType timeType
+    contains BuiltInType dateTimeType
+    contains BuiltInType durationType
+    refers BuiltInType[] builtInTypes
+}
+
+class SoalModel extends NamedElement
+{
+    RootSoalModel rootModelLazy
+    refers SoalModel[] imports
+    contains Declaration[] declarations
+
+    op GlobalSoalModel getGlobals() {
+        return SoalModelUtils.getGlobalModel(this)
+    }
+
+    derived RootSoalModel rootModel get {
+        if (rootModelLazy === null) rootModelLazy = SoalModelUtils.createRootSoalModel(this)
+        return rootModelLazy
+    }
+}
+
+class Documentation
+{
+    contains DocumentationTag[] Tags
+}
+
+enum DocumentationTagKind
+{
+    UNKNOWN,
+    VERSION,
+    ALPHA,
+    BETA,
+    DEPRECATED,
+    TEST,
+    INTERNAL,
+    SUMMARY,
+    DEFAULT_VALUE,
+    PARAM,
+    RETURNS,
+    THROWS,
+    LABEL,
+    EXAMPLE,
+    REMARKS
+}
+
+class DocumentationTag
+{
+    DocumentationTagKind kind
+    String name
+    String[] lines
+    String htmlLazy
+    op String getHtml() {
+        if (htmlLazy === null) htmlLazy = SoalModelUtils.getHtml(this)
+        return htmlLazy
+    }
+}
+
+abstract class Element
+{
+}
+
+abstract class NamedElement extends Element
+{
+    String name
+    contains Documentation documentationLazy
+
+	op String getUniqueName() {
+		return SoalModelUtils.getUniqueName(this)
+	}
+    op Documentation getDocumentation() {
+        if (documentationLazy === null) documentationLazy = SoalModelUtils.getDocumentation(this)
+        return documentationLazy
+    }
+    op String getHoverDocumentation() {
+        return documentation?.tags?.findFirst[it.kind == DocumentationTagKind.SUMMARY]?.html
+    }
+}
+
+abstract class Type
+{
+}
+
+abstract class TypedElement extends Element
+{
+    contains TypeReference typeReference
+    op Type getType() {
+        return typeReference.referencedType
+    }
+}
+
+abstract class Declaration extends NamedElement
+{
+}
+
+abstract class NamedType extends Type, Declaration
+{
+}
+
+
+enum BuiltInTypeKind
+{
+    ERROR,
+    ANY,
+    VOID,
+    OBJECT,
+    BINARY,
+    BOOL,
+    STRING,
+    INT,
+    LONG,
+    FLOAT,
+    DOUBLE,
+    DATE,
+    TIME,
+    DATETIME,
+    DURATION
+}
+
+class BuiltInType extends NamedType
+{
+    BuiltInTypeKind kind
+}
+
+abstract class TypeReference extends Type
+{
+    op Type getReferencedType() {
+        null
+    }
+}
+
+class SimpleTypeReference extends TypeReference
+{
+    refers Type referencedType
+}
+
+abstract class ArrayType extends TypeReference
+{
+    op Type getReferencedType() {
+        this
+    }
+    op Type getInnerType() {
+        null
+    }
+}
+
+class ReferenceArrayType extends ArrayType
+{
+    refers Type innerType
+}
+
+class ContainmentArrayType extends ArrayType
+{
+    contains Type innerType
+}
+
+class NullableType extends TypeReference
+{
+    op Type getReferencedType() {
+        this
+    }
+    refers Type innerType
+}
+
+class EnumType extends NamedType
+{
+    contains EnumLiteral[] literals opposite ^enum
+}
+
+class EnumLiteral extends NamedElement
+{
+    refers EnumType ^enum opposite literals
+}
+
+class StructType extends NamedType
+{
+    refers StructType baseType
+    contains Property[] fields
+}
+
+class Variable extends Declaration, TypedElement
+{
+}
+
+class Property extends Variable
+{
+}
+
+class Parameter extends Variable
+{
+}
+
+class Interface extends Declaration
+{
+    contains Resource[] resources
+    contains Operation[] operations
+}
+
+class Resource extends Declaration
+{
+    boolean ^readonly
+    refers StructType entity
+    refers StructType[] exceptions
+
+    op String getName() {
+        entity.name
+    }
+}
+
+class Operation extends Declaration
+{
+    OperationKind kind
+    boolean async
+    contains ParameterList requestParameters
+    contains ParameterList responseParameters
+    refers Resource resource
+    refers StructType[] exceptions
+
+    op boolean hasRequestParameters() {
+        return requestParameters !== null && requestParameters.parameters.size > 0
+    }
+
+    op boolean hasResponseParameters() {
+        return responseParameters !== null && responseParameters.parameters.size > 0
+    }
+
+    op boolean hasManyRequestParameters() {
+        return requestParameters !== null && requestParameters.parameters.size > 1
+    }
+
+    op boolean hasSingleResponseParameter() {
+        return responseParameters !== null && responseParameters.parameters.size == 1
+    }
+
+    op boolean hasManyResponseParameters() {
+        return responseParameters !== null && responseParameters.parameters.size > 1
+    }
+    
+    op Type singleReturnType() {
+    	if (hasSingleResponseParameter) return responseParameters.parameters.get(0).^type
+    	else return null
+    }
+}
+
+class ParameterList
+{
+    contains Parameter[] parameters
+}
+
+enum BindingKind
+{
+    SOAP,
+    REST
+}
+
+class Service extends Declaration
+{
+    refers Interface ^interface
+    BindingKind binding
+}
+
+

@@ -1,0 +1,11 @@
+description HelloWorld;
+
+interface IHello
+{
+	string SayHello(string name);
+}
+
+service Hello : IHello
+{
+	binding REST;
+}
