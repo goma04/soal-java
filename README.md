@@ -14,17 +14,17 @@ In Eclipse, right click on the **Main.xtend** inside the **soal.compiler** proje
 
 In this **Run configuration** open the **Arguments** tab, and fill the **Program arguments**.
 
-For example, to generate documentation:
+Use the following arguments, to generate documentation:
 ```
 documentation -i input/helloworld -o output
 ```
 
-For example, to generate WSDL or OpenApi descriptors:
+Use the following arguments, to generate WSDL or OpenApi descriptors:
 ```
 interface -i input/helloworld -o output
 ```
 
-For example, to generate Spring Boot client and server skeleton:
+Use the following arguments, to generate Spring Boot client and server skeleton:
 ```
 implementation -i input/helloworld -o output
 ```
