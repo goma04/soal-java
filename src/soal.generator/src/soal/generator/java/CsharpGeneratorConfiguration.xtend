@@ -1,7 +1,7 @@
 package soal.generator.java
 
 class CsharpGeneratorConfiguration {
-	String _csharpVersion = "6";	
+	String _csharpVersion = "6.0";	
 	
 	
 	

@@ -9,43 +9,132 @@ class CsharpProjectGenerator extends CsharpGeneratorBase {
 	
 	def GenerateMainCsproj() {
 		'''
-    	Csproj
+    	<Project Sdk="Microsoft.NET.Sdk">
+    	
+    	  <PropertyGroup>
+    	    <OutputType>Exe</OutputType>
+    	    <TargetFramework>net«configuration.csharpVersion»</TargetFramework>
+    	    <RootNamespace>SOAL_demo_client</RootNamespace>
+    	    <ImplicitUsings>enable</ImplicitUsings>
+    	    <Nullable>enable</Nullable>
+    	  </PropertyGroup>
+    	
+    	  <ItemGroup>
+    	    <ProjectReference Include="..\«parentName».client\«parentName».client.csproj" />
+    	  </ItemGroup>
+    	
+    	</Project>
     	'''
 	}
 	
 	def GenerateCommonCsproj() {
 		'''
-    	Csproj
+    	<Project Sdk="Microsoft.NET.Sdk">
+    	
+    	  <PropertyGroup>
+    	    <TargetFramework>net«configuration.csharpVersion»</TargetFramework>
+    	    <ImplicitUsings>enable</ImplicitUsings>
+    	    <Nullable>enable</Nullable>
+    	  </PropertyGroup>
+    	
+    	</Project>
     	'''
 	}
 	
 	def GenerateClientCsproj() {
 		'''
-    	Csproj
+    	<Project Sdk="Microsoft.NET.Sdk">
+    	
+    	  <PropertyGroup>
+    	    <TargetFramework>net«configuration.csharpVersion»</TargetFramework>
+    	    <ImplicitUsings>enable</ImplicitUsings>
+    	    <Nullable>enable</Nullable>
+    	  </PropertyGroup>
+    	
+    	  <ItemGroup>
+    	    <ProjectReference Include="..\«parentName».common\«parentName».common.csproj" />
+    	    <ProjectReference Include="..\«parentName».rest.client\«parentName».rest.client.csproj" />
+    	  </ItemGroup>
+    	
+    	</Project>
     	'''
 	}
 	
 	def GenerateServiceCsproj() {
 		'''
-    	Csproj
+    	<Project Sdk="Microsoft.NET.Sdk">
+    	
+    	  <PropertyGroup>
+    	    <TargetFramework>net«configuration.csharpVersion»</TargetFramework>
+    	    <ImplicitUsings>enable</ImplicitUsings>
+    	    <Nullable>enable</Nullable>
+    	  </PropertyGroup>
+    	
+    	  <ItemGroup>
+    	    <ProjectReference Include="..\«parentName».common\«parentName».common.csproj" />
+    	  </ItemGroup>
+    	
+    	</Project>
     	'''
 	}
 	
 	def GenerateRestCommonCsproj() {
 		'''
-    	Csproj
+    	<Project Sdk="Microsoft.NET.Sdk">
+    	
+    	  <PropertyGroup>
+    	    <TargetFramework>net«configuration.csharpVersion»</TargetFramework>
+    	    <ImplicitUsings>enable</ImplicitUsings>
+    	    <Nullable>enable</Nullable>
+    	  </PropertyGroup>
+    	
+    	  <ItemGroup>
+    	    <ProjectReference Include="..\«parentName».service\«parentName».service.csproj" />
+    	  </ItemGroup>
+    	
+    	</Project>
+
     	'''
 	}
 	
 	def GenerateRestServiceCsproj() {
 		'''
-    	Csproj
+    	<Project Sdk="Microsoft.NET.Sdk.Web">
+    	
+    	  <PropertyGroup>
+    	    <TargetFramework>net«configuration.csharpVersion»</TargetFramework>
+    	    <Nullable>enable</Nullable>
+    	    <ImplicitUsings>enable</ImplicitUsings>
+    	    <RootNamespace>SOAL_demo_restapi</RootNamespace>
+    	  </PropertyGroup>
+    	
+    	  <ItemGroup>
+    	    <ProjectReference Include="..\«parentName».common\«parentName».common.csproj" />
+    	    <ProjectReference Include="..\«parentName».rest.common\«parentName».rest.common.csproj" />
+    	    <ProjectReference Include="..\«parentName».service\«parentName».service.csproj" />
+    	  </ItemGroup>
+    	
+    	</Project>
+
     	'''
 	}
 	
 	def GenerateRestClientCsproj() {
 		'''
-    	Csproj
+    	<Project Sdk="Microsoft.NET.Sdk">
+    	
+    	  <PropertyGroup>
+    	    <TargetFramework>net«configuration.csharpVersion»</TargetFramework>
+    	    <ImplicitUsings>enable</ImplicitUsings>
+    	    <Nullable>enable</Nullable>
+    	  </PropertyGroup>
+    	
+    	  <ItemGroup>
+    	    <ProjectReference Include="..\«parentName».common\«parentName».common.csproj" />
+    	    <ProjectReference Include="..\«parentName».rest.common\«parentName».rest.common.csproj" />
+    	  </ItemGroup>
+    	
+    	</Project>
     	'''
 	}
 	
