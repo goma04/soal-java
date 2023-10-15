@@ -31,6 +31,8 @@ import soal.model.RootSoalModel
 import soal.model.Service
 import soal.model.SoalModel
 import soal.model.SoalModelUtils
+import soal.generator.java.CsharpGeneratorConfiguration
+import soal.generator.java.CsharpProjectGenerator
 
 class SoalCompiler {
     final Logger logger = Logger.getLogger(SoalCompiler)
@@ -39,6 +41,7 @@ class SoalCompiler {
     String _outputPath
     String _modelName
     JavaGeneratorConfiguration _config
+    CsharpGeneratorConfiguration _configCsharp
     RootSoalModel _rootModel
     MavenProjectGenerator _mavenGenerator
     EclipseProjectGenerator _eclipseGenerator
@@ -49,6 +52,7 @@ class SoalCompiler {
     RestCommonGenerator _restCommonGenerator
     RestClientGenerator _restClientGenerator
     RestServiceGenerator _restServiceGenerator
+    CsharpProjectGenerator _csharpGenerator
 
     new (String inputPath, String outputPath) {
         _inputPath = inputPath
@@ -57,6 +61,7 @@ class SoalCompiler {
         val file = new File(inputPath)
         _modelName = file.name.withoutExtension.toLowerCase
         _config = new JavaGeneratorConfiguration()
+        _configCsharp = new CsharpGeneratorConfiguration()
     }
 
     def getRootModel() {
@@ -71,6 +76,13 @@ class SoalCompiler {
             _mavenGenerator = new MavenProjectGenerator(rootModel, _modelName, _config)
         }
         return _mavenGenerator
+    }
+    
+    def getCsharpGenerator() {
+    	if(_csharpGenerator === null) {
+    		_csharpGenerator = new CsharpProjectGenerator(rootModel, _modelName, _configCsharp)
+    	}
+    	return _csharpGenerator
     }
 
     def getEclipseGenerator() {
@@ -234,6 +246,35 @@ class SoalCompiler {
         javaSources(projectPath, restServiceGenerator.generateAll)
     }
 
+    def generateCsharpImplementation(){
+         directory(_outputPath)
+
+          var projectPath = _outputPath
+          
+          //main
+          projectPath = csharpProject(_modelName + ".main", csharpGenerator.GenerateMainCsproj)
+          
+          //common
+          projectPath = csharpProject(_modelName + ".common", csharpGenerator.GenerateCommonCsproj)
+          
+          // client
+        projectPath = csharpProject(_modelName + ".client", csharpGenerator.GenerateClientCsproj)
+
+        // service
+        projectPath = csharpProject(_modelName + ".service", csharpGenerator.GenerateServiceCsproj)
+
+        // rest.common
+       projectPath = csharpProject(_modelName + ".rest.common", csharpGenerator.GenerateRestCommonCsproj)
+
+        // rest.client
+       projectPath = csharpProject(_modelName + ".rest.client", csharpGenerator.GenerateRestClientCsproj)
+       
+        // rest.service
+        projectPath = csharpProject(_modelName + ".rest.service", csharpGenerator.GenerateRestServiceCsproj)
+          
+
+    }
+
     def mavenProject(String projectName, CharSequence pomXml) {
         val projectPath = directory(_outputPath, projectName)
         directory(projectPath, "src/main/java")
@@ -244,6 +285,13 @@ class SoalCompiler {
         save(projectPath, ".project", eclipseGenerator.generateProject(projectName), false)
         save(projectPath, "pom.xml", pomXml, false)
         return projectPath
+    }
+    
+    def csharpProject(String projectName, CharSequence csprojXml){
+    	val projectPath = directory(_outputPath, projectName)
+    	directory(projectPath, "src")    	
+    	save(projectPath, ".csproj", csprojXml, false)
+    	return projectPath
     }
 
     def javaSources(String projectPath, List<GeneratedFile> files) {
@@ -285,6 +333,7 @@ class SoalCompiler {
         return file.canonicalPath
     }
 
+	//Creates a new directory
     def directory(String path, String subPath) throws IOException {
         val file = new File(path, subPath)
         file.mkdirs()

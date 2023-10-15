@@ -58,6 +58,8 @@ class Main {
             compiler.generateInterface()
         } else if (target == "implementation") {
             compiler.generateImplementation()
+        } else if(target == "csharp") {
+            compiler.generateCsharpImplementation()
         } else if (target == "documentation") {
             compiler.generateDocumentation()
         } else {
