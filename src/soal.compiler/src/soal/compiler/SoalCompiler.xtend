@@ -35,317 +35,321 @@ import soal.generator.csharp.CsharpGeneratorConfiguration
 import soal.generator.csharp.CsharpProjectGenerator
 
 class SoalCompiler {
-    final Logger logger = Logger.getLogger(SoalCompiler)
+	final Logger logger = Logger.getLogger(SoalCompiler)
 
-    String _inputPath
-    String _outputPath
-    String _modelName
-    JavaGeneratorConfiguration _config
-    CsharpGeneratorConfiguration _configCsharp
-    RootSoalModel _rootModel
-    MavenProjectGenerator _mavenGenerator
-    EclipseProjectGenerator _eclipseGenerator
-    JavaMainGenerator _mainGenerator
-    JavaCommonGenerator _commonGenerator
-    JavaClientGenerator _clientGenerator
-    JavaServiceGenerator _serviceGenerator
-    RestCommonGenerator _restCommonGenerator
-    RestClientGenerator _restClientGenerator
-    RestServiceGenerator _restServiceGenerator
-    CsharpProjectGenerator _csharpGenerator
+	String _inputPath
+	String _outputPath
+	String _modelName
+	JavaGeneratorConfiguration _config
+	CsharpGeneratorConfiguration _configCsharp
+	RootSoalModel _rootModel
+	MavenProjectGenerator _mavenGenerator
+	EclipseProjectGenerator _eclipseGenerator
+	JavaMainGenerator _mainGenerator
+	JavaCommonGenerator _commonGenerator
+	JavaClientGenerator _clientGenerator
+	JavaServiceGenerator _serviceGenerator
+	RestCommonGenerator _restCommonGenerator
+	RestClientGenerator _restClientGenerator
+	RestServiceGenerator _restServiceGenerator
+	CsharpProjectGenerator _csharpGenerator
 
-    new (String inputPath, String outputPath) {
-        _inputPath = inputPath
-        _outputPath = outputPath
+	new(String inputPath, String outputPath) {
+		_inputPath = inputPath
+		_outputPath = outputPath
 
-        val file = new File(inputPath)
-        _modelName = file.name.withoutExtension.toLowerCase
-        _config = new JavaGeneratorConfiguration()
-        _configCsharp = new CsharpGeneratorConfiguration()
-    }
+		val file = new File(inputPath)
+		_modelName = file.name.withoutExtension.toLowerCase
+		_config = new JavaGeneratorConfiguration()
+		_configCsharp = new CsharpGeneratorConfiguration()
+	}
 
-    def getRootModel() {
-        if (_rootModel === null) {
-            _rootModel = readRootSoalModel(_inputPath)
-        }
-        return _rootModel
-    }
+	def getRootModel() {
+		if (_rootModel === null) {
+			_rootModel = readRootSoalModel(_inputPath)
+		}
+		return _rootModel
+	}
 
-    def getMavenGenerator() {
-        if (_mavenGenerator === null) {
-            _mavenGenerator = new MavenProjectGenerator(rootModel, _modelName, _config)
-        }
-        return _mavenGenerator
-    }
-    
-    def getCsharpGenerator() {
-    	if(_csharpGenerator === null) {
-    		_csharpGenerator = new CsharpProjectGenerator(rootModel, _modelName, _configCsharp)
-    	}
-    	return _csharpGenerator
-    }
+	def getMavenGenerator() {
+		if (_mavenGenerator === null) {
+			_mavenGenerator = new MavenProjectGenerator(rootModel, _modelName, _config)
+		}
+		return _mavenGenerator
+	}
 
-    def getEclipseGenerator() {
-        if (_eclipseGenerator === null) {
-            _eclipseGenerator = new EclipseProjectGenerator(rootModel, _modelName, _config)
-        }
-        return _eclipseGenerator
-    }
+	def getCsharpGenerator() {
+		if (_csharpGenerator === null) {
+			_csharpGenerator = new CsharpProjectGenerator(rootModel, _modelName, _configCsharp)
+		}
+		return _csharpGenerator
+	}
 
-    def getMainGenerator() {
-        if (_mainGenerator === null) {
-            _mainGenerator = new JavaMainGenerator(rootModel, _modelName, _config)
-        }
-        return _mainGenerator
-    }
+	def getEclipseGenerator() {
+		if (_eclipseGenerator === null) {
+			_eclipseGenerator = new EclipseProjectGenerator(rootModel, _modelName, _config)
+		}
+		return _eclipseGenerator
+	}
 
-    def getCommonGenerator() {
-        if (_commonGenerator === null) {
-            _commonGenerator = new JavaCommonGenerator(rootModel, _modelName, _config)
-        }
-        return _commonGenerator
-    }
+	def getMainGenerator() {
+		if (_mainGenerator === null) {
+			_mainGenerator = new JavaMainGenerator(rootModel, _modelName, _config)
+		}
+		return _mainGenerator
+	}
 
-    def getClientGenerator() {
-        if (_clientGenerator === null) {
-            _clientGenerator = new JavaClientGenerator(rootModel, _modelName, _config)
-        }
-        return _clientGenerator
-    }
+	def getCommonGenerator() {
+		if (_commonGenerator === null) {
+			_commonGenerator = new JavaCommonGenerator(rootModel, _modelName, _config)
+		}
+		return _commonGenerator
+	}
 
-    def getServiceGenerator() {
-        if (_serviceGenerator === null) {
-            _serviceGenerator = new JavaServiceGenerator(rootModel, _modelName, _config)
-        }
-        return _serviceGenerator
-    }
+	def getClientGenerator() {
+		if (_clientGenerator === null) {
+			_clientGenerator = new JavaClientGenerator(rootModel, _modelName, _config)
+		}
+		return _clientGenerator
+	}
 
-    def getRestCommonGenerator() {
-        if (_restCommonGenerator === null) {
-            _restCommonGenerator = new RestCommonGenerator(rootModel, _modelName, _config)
-        }
-        return _restCommonGenerator
-    }
+	def getServiceGenerator() {
+		if (_serviceGenerator === null) {
+			_serviceGenerator = new JavaServiceGenerator(rootModel, _modelName, _config)
+		}
+		return _serviceGenerator
+	}
 
-    def getRestClientGenerator() {
-        if (_restClientGenerator === null) {
-            _restClientGenerator = new RestClientGenerator(rootModel, _modelName, _config)
-        }
-        return _restClientGenerator
-    }
+	def getRestCommonGenerator() {
+		if (_restCommonGenerator === null) {
+			_restCommonGenerator = new RestCommonGenerator(rootModel, _modelName, _config)
+		}
+		return _restCommonGenerator
+	}
 
-    def getRestServiceGenerator() {
-        if (_restServiceGenerator === null) {
-            _restServiceGenerator = new RestServiceGenerator(rootModel, _modelName, _config)
-        }
-        return _restServiceGenerator
-    }
+	def getRestClientGenerator() {
+		if (_restClientGenerator === null) {
+			_restClientGenerator = new RestClientGenerator(rootModel, _modelName, _config)
+		}
+		return _restClientGenerator
+	}
 
-    def RootSoalModel readRootSoalModel(String path) throws IOException {
-        val file = new File(path);
-        if (file.exists()) {
-            val parser = new SoalParser()
+	def getRestServiceGenerator() {
+		if (_restServiceGenerator === null) {
+			_restServiceGenerator = new RestServiceGenerator(rootModel, _modelName, _config)
+		}
+		return _restServiceGenerator
+	}
 
-            if (file.isFile() && path.toLowerCase().endsWith(".soal")) {
-                parser.addFile(file.canonicalPath)
-            } else if (file.isDirectory()) {
-                for (File soalFile: file.listFiles()) {
-                    val soalFilePath = soalFile.canonicalPath
-                    if (soalFilePath.toLowerCase().endsWith(".soal")) {
-                        parser.addFile(soalFilePath)
-                    }
-                }
-            }
+	def RootSoalModel readRootSoalModel(String path) throws IOException {
+		val file = new File(path);
+		if (file.exists()) {
+			val parser = new SoalParser()
 
-            val models = new ArrayList<SoalModel>();
-            for (Resource resource: parser.getResourceSet().getResources()) {
-                if (resource.getContents().size() > 0) {
-                    val root = resource.getContents().get(0);
-                    if (root instanceof SoalModel) {
-                        models.add(root as SoalModel)
-                    }
-                }
-            }
+			if (file.isFile() && path.toLowerCase().endsWith(".soal")) {
+				parser.addFile(file.canonicalPath)
+			} else if (file.isDirectory()) {
+				for (File soalFile : file.listFiles()) {
+					val soalFilePath = soalFile.canonicalPath
+					if (soalFilePath.toLowerCase().endsWith(".soal")) {
+						parser.addFile(soalFilePath)
+					}
+				}
+			}
 
-            if (parser.hasAnyErrors) {
-                throw new IOException(String.format("Error - Could not compile the SOAL files in %s", path));
-            } else if (models.isEmpty) {
-                throw new IOException(String.format("Error - There are no SOAL files in %s", path));
-            } else {
-                val globalModel = SoalModelUtils.getGlobalModel(parser.getResourceSet());
-                val rootModel = new RootSoalModel(globalModel, models);
-                return rootModel;
-            }
-        } else {
-            throw new IOException(String.format("Error - The %s file does not exist.", path));
-        }
-    }
+			val models = new ArrayList<SoalModel>();
+			for (Resource resource : parser.getResourceSet().getResources()) {
+				if (resource.getContents().size() > 0) {
+					val root = resource.getContents().get(0);
+					if (root instanceof SoalModel) {
+						models.add(root as SoalModel)
+					}
+				}
+			}
 
-    def generateDocumentation() {
-        val html = _modelName+".html"
-        save(_outputPath, html, new HtmlGenerator(rootModel, _modelName).generate(), true)
-    }
+			if (parser.hasAnyErrors) {
+				throw new IOException(String.format("Error - Could not compile the SOAL files in %s", path));
+			} else if (models.isEmpty) {
+				throw new IOException(String.format("Error - There are no SOAL files in %s", path));
+			} else {
+				val globalModel = SoalModelUtils.getGlobalModel(parser.getResourceSet());
+				val rootModel = new RootSoalModel(globalModel, models);
+				return rootModel;
+			}
+		} else {
+			throw new IOException(String.format("Error - The %s file does not exist.", path));
+		}
+	}
 
-    def generateInterface() {
-        val openApi30 = _modelName+"-OpenApi-3.0.yaml"
-        val openApi31 = _modelName+"-OpenApi-3.1.yaml"
-        if (rootModel.declarations.filter(Service).exists[it.binding == BindingKind.REST]) {
-            save(_outputPath, openApi30, new OpenApiGenerator(rootModel, InterfaceKind.GENERAL, OpenApiVersion.VERSION_3_0).generate(), true)
-            save(_outputPath, openApi31, new OpenApiGenerator(rootModel, InterfaceKind.GENERAL, OpenApiVersion.VERSION_3_1).generate(), true);
-        } else {
-            delete(_outputPath, openApi30);
-            delete(_outputPath, openApi31);
-        }
+	def generateDocumentation() {
+		val html = _modelName + ".html"
+		save(_outputPath, html, new HtmlGenerator(rootModel, _modelName).generate(), true)
+	}
 
-        val xsd = _modelName+".xsd"
-        val wsdl = _modelName+".wsdl"
-        if (rootModel.declarations.filter(Service).exists[it.binding == BindingKind.SOAP]) {
-            save(_outputPath, xsd, new XsdGenerator(rootModel, _modelName, true).generate(), true)
-            save(_outputPath, wsdl, new WsdlGenerator(rootModel, _modelName, false).generate(), true);
-        } else {
-            delete(_outputPath, xsd);
-            delete(_outputPath, wsdl);
-        }
-    }
+	def generateInterface() {
+		val openApi30 = _modelName + "-OpenApi-3.0.yaml"
+		val openApi31 = _modelName + "-OpenApi-3.1.yaml"
+		if (rootModel.declarations.filter(Service).exists[it.binding == BindingKind.REST]) {
+			save(_outputPath, openApi30,
+				new OpenApiGenerator(rootModel, InterfaceKind.GENERAL, OpenApiVersion.VERSION_3_0).generate(), true)
+			save(_outputPath, openApi31,
+				new OpenApiGenerator(rootModel, InterfaceKind.GENERAL, OpenApiVersion.VERSION_3_1).generate(), true);
+		} else {
+			delete(_outputPath, openApi30);
+			delete(_outputPath, openApi31);
+		}
 
-    def generateImplementation() {
-        directory(_outputPath)
+		val xsd = _modelName + ".xsd"
+		val wsdl = _modelName + ".wsdl"
+		if (rootModel.declarations.filter(Service).exists[it.binding == BindingKind.SOAP]) {
+			save(_outputPath, xsd, new XsdGenerator(rootModel, _modelName, true).generate(), true)
+			save(_outputPath, wsdl, new WsdlGenerator(rootModel, _modelName, false).generate(), true);
+		} else {
+			delete(_outputPath, xsd);
+			delete(_outputPath, wsdl);
+		}
+	}
 
-        var projectPath = _outputPath
+	def generateImplementation() {
+		directory(_outputPath)
 
-        // parent
-        save(projectPath, "pom.xml", mavenGenerator.generateParentPomXml, false)
-        save(projectPath, ".project", eclipseGenerator.generateParentProject(_modelName), false)
+		var projectPath = _outputPath
 
-        // main
-        projectPath = mavenProject(_modelName+".main", mavenGenerator.generateMainPomXml())
-        javaSources(projectPath, mainGenerator.generateAll)
+		// parent
+		save(projectPath, "pom.xml", mavenGenerator.generateParentPomXml, false)
+		save(projectPath, ".project", eclipseGenerator.generateParentProject(_modelName), false)
 
-        // common
-        projectPath = mavenProject(_modelName+".common", mavenGenerator.generateCommonPomXml())
-        javaSources(projectPath, commonGenerator.generateAll)
+		// main
+		projectPath = mavenProject(_modelName + ".main", mavenGenerator.generateMainPomXml())
+		javaSources(projectPath, mainGenerator.generateAll)
 
-        // client
-        projectPath = mavenProject(_modelName+".client", mavenGenerator.generateClientPomXml())
-        javaSources(projectPath, clientGenerator.generateAll)
+		// common
+		projectPath = mavenProject(_modelName + ".common", mavenGenerator.generateCommonPomXml())
+		javaSources(projectPath, commonGenerator.generateAll)
 
-        // service
-        projectPath = mavenProject(_modelName+".service", mavenGenerator.generateServicePomXml())
-        javaSources(projectPath, serviceGenerator.generateAll)
+		// client
+		projectPath = mavenProject(_modelName + ".client", mavenGenerator.generateClientPomXml())
+		javaSources(projectPath, clientGenerator.generateAll)
 
-        // rest.common
-        projectPath = mavenProject(_modelName+".rest.common", mavenGenerator.generateRestCommonPomXml())
-        javaSources(projectPath, restCommonGenerator.generateAll)
+		// service
+		projectPath = mavenProject(_modelName + ".service", mavenGenerator.generateServicePomXml())
+		javaSources(projectPath, serviceGenerator.generateAll)
 
-        // rest.client
-        projectPath = mavenProject(_modelName+".rest.client", mavenGenerator.generateRestClientPomXml())
-        javaSources(projectPath, restClientGenerator.generateAll)
+		// rest.common
+		projectPath = mavenProject(_modelName + ".rest.common", mavenGenerator.generateRestCommonPomXml())
+		javaSources(projectPath, restCommonGenerator.generateAll)
 
-        // rest.service
-        projectPath = mavenProject(_modelName+".rest.service", mavenGenerator.generateRestServicePomXml())
-        javaSources(projectPath, restServiceGenerator.generateAll)
-    }
+		// rest.client
+		projectPath = mavenProject(_modelName + ".rest.client", mavenGenerator.generateRestClientPomXml())
+		javaSources(projectPath, restClientGenerator.generateAll)
 
-    def generateCsharpImplementation(){
-         directory(_outputPath)
+		// rest.service
+		projectPath = mavenProject(_modelName + ".rest.service", mavenGenerator.generateRestServicePomXml())
+		javaSources(projectPath, restServiceGenerator.generateAll)
+	}
 
-          var projectPath = _outputPath
-          
-          //main
-          projectPath = csharpProject(_modelName + ".main", csharpGenerator.GenerateMainCsproj)
-          
-          //common
-          projectPath = csharpProject(_modelName + ".common", csharpGenerator.GenerateCommonCsproj)
-          
-          // client
-        projectPath = csharpProject(_modelName + ".client", csharpGenerator.GenerateClientCsproj)
+	def generateCsharpImplementation() {
+		directory(_outputPath)
 
-        // service
-        projectPath = csharpProject(_modelName + ".service", csharpGenerator.GenerateServiceCsproj)
+		var projectPath = _outputPath
 
-        // rest.common
-       projectPath = csharpProject(_modelName + ".rest.common", csharpGenerator.GenerateRestCommonCsproj)
+		// main
+		projectPath = csharpProject(_modelName + "Main", csharpGenerator.GenerateMainCsproj, ProjectType.Main)
 
-        // rest.client
-       projectPath = csharpProject(_modelName + ".rest.client", csharpGenerator.GenerateRestClientCsproj)
-       
-        // rest.service
-        projectPath = csharpProject(_modelName + ".rest.service", csharpGenerator.GenerateRestServiceCsproj)
-          
+		// common
+		projectPath = csharpProject(_modelName + "Common", csharpGenerator.GenerateCommonCsproj, ProjectType.Common)
 
-    }
+		// client
+		projectPath = csharpProject(_modelName + "Client", csharpGenerator.GenerateClientCsproj, ProjectType.Client)
 
-    def mavenProject(String projectName, CharSequence pomXml) {
-        val projectPath = directory(_outputPath, projectName)
-        directory(projectPath, "src/main/java")
-        directory(projectPath, "src/main/resources")
-        directory(projectPath, "src/test/java")
-        directory(projectPath, "src/test/resources")
-        save(projectPath, ".classpath", eclipseGenerator.generateClassPath(), false)
-        save(projectPath, ".project", eclipseGenerator.generateProject(projectName), false)
-        save(projectPath, "pom.xml", pomXml, false)
-        return projectPath
-    }
-    
-    def csharpProject(String projectName, CharSequence csprojXml){
-    	val projectPath = directory(_outputPath, projectName)
-    	directory(projectPath, "src")    	
-    	save(projectPath, ".csproj", csprojXml, false)
-    	return projectPath
-    }
+		// service
+		projectPath = csharpProject(_modelName + "Service", csharpGenerator.GenerateServiceCsproj, ProjectType.Service)
 
-    def javaSources(String projectPath, List<GeneratedFile> files) {
-        val javaPath = new File(projectPath, "src/main/java")
-        for (file: files) {
-            val packagePath = new File(javaPath, file.directory).canonicalPath
-            directory(packagePath)
-            save(packagePath, file.fileName, file.content, file.overwriteIfExists)
-        }
-    }
+		// rest.common
+		projectPath = csharpProject(_modelName + "RestCommon", csharpGenerator.GenerateRestCommonCsproj, ProjectType.RestCommon)
 
-    def save(String path, String fileName, CharSequence code, boolean overwrite) throws IOException {
-        return save(path, fileName, code.toString, overwrite)
-    }
+		// rest.client
+		projectPath = csharpProject(_modelName + "RestClient", csharpGenerator.GenerateRestClientCsproj, ProjectType.RestClient)
 
-    def save(String path, String fileName, String code, boolean overwrite) throws IOException {
-        val file = new File(path, fileName)
-        if (!overwrite && file.exists) {
-            logger.info(String.format("Exists: %s", file.canonicalPath))
-        } else {
-            if (file.exists) {
-                logger.warn(String.format("Overwrite: %s", file.canonicalPath))
-            } else {
-                logger.info(String.format("New: %s", file.canonicalPath))
-            }
-            Files.write(Paths.get(file.canonicalPath), code.getBytes())
-        }
-        return file.canonicalPath
-    }
+		// rest.service
+		projectPath = csharpProject(_modelName + "RestService", csharpGenerator.GenerateRestServiceCsproj, ProjectType.RestService)
 
-    def delete(String path, String fileName) throws IOException {
-        val file = new File(path, fileName)
-        if (file.exists) file.delete
-    }
+	}
 
-    def directory(String path) throws IOException {
-        val file = new File(path)
-        file.mkdirs()
-        return file.canonicalPath
-    }
+	def mavenProject(String projectName, CharSequence pomXml) {
+		val projectPath = directory(_outputPath, projectName)
+		directory(projectPath, "src/main/java")
+		directory(projectPath, "src/main/resources")
+		directory(projectPath, "src/test/java")
+		directory(projectPath, "src/test/resources")
+		save(projectPath, ".classpath", eclipseGenerator.generateClassPath(), false)
+		save(projectPath, ".project", eclipseGenerator.generateProject(projectName), false)
+		save(projectPath, "pom.xml", pomXml, false)
+		return projectPath
+	}
 
-	//Creates a new directory
-    def directory(String path, String subPath) throws IOException {
-        val file = new File(path, subPath)
-        file.mkdirs()
-        return file.canonicalPath
-    }
+	def csharpProject(String projectName, CharSequence csprojXml, ProjectType projectType) {
+		val projectPath = directory(_outputPath, projectName)
+		if(projectType == ProjectType.RestService){
+			directory(projectPath, "Properties")
+				directory(projectPath, "Controllers")
+		}		
+		save(projectPath, ".csproj", csprojXml, false)
+		return projectPath
+	}
 
-    def static withoutExtension(String fileName) {
-        val index = fileName.lastIndexOf('.')
-        if (index == -1) {
-            return fileName
-        } else {
-            return fileName.substring(0, index)
-        }
-    }
+	def javaSources(String projectPath, List<GeneratedFile> files) {
+		val javaPath = new File(projectPath, "src/main/java")
+		for (file : files) {
+			val packagePath = new File(javaPath, file.directory).canonicalPath
+			directory(packagePath)
+			save(packagePath, file.fileName, file.content, file.overwriteIfExists)
+		}
+	}
+
+	def save(String path, String fileName, CharSequence code, boolean overwrite) throws IOException {
+		return save(path, fileName, code.toString, overwrite)
+	}
+
+	def save(String path, String fileName, String code, boolean overwrite) throws IOException {
+		val file = new File(path, fileName)
+		if (!overwrite && file.exists) {
+			logger.info(String.format("Exists: %s", file.canonicalPath))
+		} else {
+			if (file.exists) {
+				logger.warn(String.format("Overwrite: %s", file.canonicalPath))
+			} else {
+				logger.info(String.format("New: %s", file.canonicalPath))
+			}
+			Files.write(Paths.get(file.canonicalPath), code.getBytes())
+		}
+		return file.canonicalPath
+	}
+
+	def delete(String path, String fileName) throws IOException {
+		val file = new File(path, fileName)
+		if(file.exists) file.delete
+	}
+
+	def directory(String path) throws IOException {
+		val file = new File(path)
+		file.mkdirs()
+		return file.canonicalPath
+	}
+
+	// Creates a new directory
+	def directory(String path, String subPath) throws IOException {
+		val file = new File(path, subPath)
+		file.mkdirs()
+		return file.canonicalPath
+	}
+
+	def static withoutExtension(String fileName) {
+		val index = fileName.lastIndexOf('.')
+		if (index == -1) {
+			return fileName
+		} else {
+			return fileName.substring(0, index)
+		}
+	}
 }
