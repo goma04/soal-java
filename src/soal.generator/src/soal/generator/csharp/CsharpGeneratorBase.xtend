@@ -1,4 +1,4 @@
-package soal.generator.java
+package soal.generator.csharp
 
 import soal.model.RootSoalModel
 import soal.generator.GeneratorBase

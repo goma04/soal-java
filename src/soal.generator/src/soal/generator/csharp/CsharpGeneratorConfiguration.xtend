@@ -1,4 +1,4 @@
-package soal.generator.java
+package soal.generator.csharp
 
 class CsharpGeneratorConfiguration {
 	String _csharpVersion = "6.0";	

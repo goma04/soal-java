@@ -31,8 +31,8 @@ import soal.model.RootSoalModel
 import soal.model.Service
 import soal.model.SoalModel
 import soal.model.SoalModelUtils
-import soal.generator.java.CsharpGeneratorConfiguration
-import soal.generator.java.CsharpProjectGenerator
+import soal.generator.csharp.CsharpGeneratorConfiguration
+import soal.generator.csharp.CsharpProjectGenerator
 
 class SoalCompiler {
     final Logger logger = Logger.getLogger(SoalCompiler)

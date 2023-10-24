@@ -12,4 +12,5 @@ Export-Package:
  soal.generator.doc,
  soal.generator.soap,
  soal.generator.rest,
- soal.generator.java
+ soal.generator.java, 
+ soal.generator.csharp
