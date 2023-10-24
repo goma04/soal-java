@@ -33,6 +33,7 @@ import soal.model.SoalModel
 import soal.model.SoalModelUtils
 import soal.generator.csharp.CsharpGeneratorConfiguration
 import soal.generator.csharp.CsharpProjectGenerator
+import soal.generator.csharp.CsharpRestServiceGenerator
 
 class SoalCompiler {
 	final Logger logger = Logger.getLogger(SoalCompiler)
@@ -52,6 +53,7 @@ class SoalCompiler {
 	RestCommonGenerator _restCommonGenerator
 	RestClientGenerator _restClientGenerator
 	RestServiceGenerator _restServiceGenerator
+	CsharpRestServiceGenerator _csharpRestServiceGenerator
 	CsharpProjectGenerator _csharpGenerator
 
 	new(String inputPath, String outputPath) {
@@ -139,6 +141,13 @@ class SoalCompiler {
 			_restServiceGenerator = new RestServiceGenerator(rootModel, _modelName, _config)
 		}
 		return _restServiceGenerator
+	}
+	
+	def getCsharpRestServiceGenerator(){
+		if(_csharpRestServiceGenerator === null){
+			_csharpRestServiceGenerator = new CsharpRestServiceGenerator(rootModel, _modelName, _config)
+		}
+		return _csharpRestServiceGenerator
 	}
 
 	def RootSoalModel readRootSoalModel(String path) throws IOException {
@@ -254,25 +263,26 @@ class SoalCompiler {
 		var projectPath = _outputPath
 
 		// main
-		projectPath = csharpProject(_modelName + "Main", csharpGenerator.GenerateMainCsproj, ProjectType.Main)
+		projectPath = csharpProject(_modelName + ".Main", csharpGenerator.GenerateMainCsproj, ProjectType.Main)
 
 		// common
-		projectPath = csharpProject(_modelName + "Common", csharpGenerator.GenerateCommonCsproj, ProjectType.Common)
+		projectPath = csharpProject(_modelName + ".Common", csharpGenerator.GenerateCommonCsproj, ProjectType.Common)
 
 		// client
-		projectPath = csharpProject(_modelName + "Client", csharpGenerator.GenerateClientCsproj, ProjectType.Client)
+		projectPath = csharpProject(_modelName + ".Client", csharpGenerator.GenerateClientCsproj, ProjectType.Client)
 
 		// service
-		projectPath = csharpProject(_modelName + "Service", csharpGenerator.GenerateServiceCsproj, ProjectType.Service)
+		projectPath = csharpProject(_modelName + ".Service", csharpGenerator.GenerateServiceCsproj, ProjectType.Service)
 
 		// rest.common
-		projectPath = csharpProject(_modelName + "RestCommon", csharpGenerator.GenerateRestCommonCsproj, ProjectType.RestCommon)
+		projectPath = csharpProject(_modelName + "Rest.Common", csharpGenerator.GenerateRestCommonCsproj, ProjectType.RestCommon)
 
 		// rest.client
-		projectPath = csharpProject(_modelName + "RestClient", csharpGenerator.GenerateRestClientCsproj, ProjectType.RestClient)
+		projectPath = csharpProject(_modelName + "Rest.Client", csharpGenerator.GenerateRestClientCsproj, ProjectType.RestClient)
 
 		// rest.service
-		projectPath = csharpProject(_modelName + "RestService", csharpGenerator.GenerateRestServiceCsproj, ProjectType.RestService)
+		projectPath = csharpProject(_modelName + "Rest.Service", csharpGenerator.GenerateRestServiceCsproj, ProjectType.RestService)
+		csharpSources(projectPath, csharpRestServiceGenerator.generateAll())
 
 	}
 
@@ -301,7 +311,18 @@ class SoalCompiler {
 	def javaSources(String projectPath, List<GeneratedFile> files) {
 		val javaPath = new File(projectPath, "src/main/java")
 		for (file : files) {
+			logger.info("info-"+file.directory)
 			val packagePath = new File(javaPath, file.directory).canonicalPath
+			directory(packagePath)
+			save(packagePath, file.fileName, file.content, file.overwriteIfExists)
+		}
+	}
+	
+	def csharpSources(String projectPath, List<GeneratedFile> files){
+		val path = new File(projectPath, "test")
+		for (file : files) {
+			logger.info("info-"+file.directory)
+			val packagePath = new File(projectPath).canonicalPath
 			directory(packagePath)
 			save(packagePath, file.fileName, file.content, file.overwriteIfExists)
 		}
