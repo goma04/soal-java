@@ -6,6 +6,7 @@ import soal.generator.GeneratedFile
 import java.util.ArrayList
 import soal.model.Service
 import soal.model.OperationKind
+import soal.model.Operation
 
 class CsharpRestServiceGenerator extends CsharpRestGeneratorBase {
 
@@ -151,28 +152,58 @@ class CsharpRestServiceGenerator extends CsharpRestGeneratorBase {
 				}				
 		'''
 	}
-	
+
 	def generatePutMethod() {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
-	
+
 	def generateRpcMethod() {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
-	
+
 	def generateGet_AllMethod() {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
-	
+
 	def generateGetMethod() {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
-	
+
 	def generateDeleteMethod() {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 
-	def generatePostMethod() {
+	def generatePostMethod(Operation op) {
+		'''
+			[Route("api/[controller]")]
+						        	public «op.name»Response «op.name.toCamelCase»(@RequestBody «op.name»Request __request) {
+						        	    «IF op.hasRequestParameters»
+						        	    	«FOR param: op.requestParameters.parameters»
+						        	    		«generateTypeRef(param.type, false)» «param.name.toCamelCase» = __request.«param.name.toGetterName»();
+						        	    	«ENDFOR»
+						        	    «ENDIF»
+						        	    «IF !op.hasResponseParameters»
+						        	    	_service.«op.name.toCamelCase»(«generateArguments(service.interface, op)»);
+						        	    «ELSEIF op.hasSingleResponseParameter»
+						        	    	«IF op.singleReturnType.isCustomType»«parentName».common.«ENDIF»«generateTypeRef(op.singleReturnType, false)» __result = _service.«op.name.toCamelCase»(«generateToCommonArguments(service.interface, op)»);
+						        	    	«op.name»Response __response = new «op.name»Response();
+						        	    	«IF op.singleReturnType.isCustomType»
+						        	    		__response.setResult(«generateTypeRef(op.singleReturnType, false)».fromCommon(__result));
+						        	    	«ELSE»
+						        	    		__response.setResult(__result);
+						        	    	«ENDIF»
+						        	    	return __response;
+						        	    «ELSE»
+						        	    	«op.name»Return __result = _service.«op.name.toCamelCase»(«generateToCommonArguments(service.interface, op)»);
+						        	    	«op.name»Response __response = new «op.name»Response();
+						        	    	«FOR param: op.responseParameters.parameters»
+						        	    		__response.«param.name.toSetterName»(__result.«param.name.toGetterName»());
+						        	    	«ENDFOR»
+						        	    	return __response;
+						        	    «ENDIF»
+						        	}
+						        	
+		'''
 	}
 
 }
