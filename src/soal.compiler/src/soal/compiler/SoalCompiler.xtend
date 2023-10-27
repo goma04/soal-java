@@ -145,7 +145,7 @@ class SoalCompiler {
 	
 	def getCsharpRestServiceGenerator(){
 		if(_csharpRestServiceGenerator === null){
-			_csharpRestServiceGenerator = new CsharpRestServiceGenerator(rootModel, _modelName, _config)
+			_csharpRestServiceGenerator = new CsharpRestServiceGenerator(rootModel, _modelName, _configCsharp)
 		}
 		return _csharpRestServiceGenerator
 	}
