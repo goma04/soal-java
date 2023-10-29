@@ -45,7 +45,7 @@ class CsharpClientGenerator extends CsharpGeneratorBase {
 					 	    	client.«op.name.toPascalCase»(«generateArguments(service.interface, op)»);
 					 	    «ENDIF»
 					 	}				 	
-					«ENDFOR»				 
+				«ENDFOR»				 
 				}
 			}
 		'''
