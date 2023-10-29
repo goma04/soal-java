@@ -109,6 +109,10 @@ class CsharpGeneratorBase extends GeneratorBase{
     def generateOperationSignature(Interface type, Operation op) {
         '''«generateReturnType(type, op)» «op.name.toPascalCase»(«generateParameters(type, op)»)'''
     }
+    
+    def generateAsyncOperationSignature(Interface type, Operation op) {
+        '''Task<«generateReturnType(type, op)»> «op.name.toPascalCase»(«generateParameters(type, op)»)'''
+    }
 
     def generateReturnType(Interface type, Operation op) {
         if (!op.hasResponseParameters) return "void"

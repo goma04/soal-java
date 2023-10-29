@@ -24,41 +24,29 @@ class CsharpClientGenerator extends CsharpGeneratorBase {
 
 	def generateClient(Service service) {
 		'''
-			package «parentName».client;
+			using «parentName».Common
 			
-			import «parentName».common.«service.interface.name»;
-			«FOR type : typeAnalysis.getUsedTypes(service.interface)»
-				import «parentName».common.«generateTypeRef(type, false)»;
-			«ENDFOR»
 			
-			public class «service.name» implements «service.interface.name», AutoCloseable {
-			    private «service.interface.name» _client;
-			
-			    private synchronized «service.interface.name» getClient() {
-			    if (_client == null) {
-			        _client = new «service.name»ClientFactory().create();
-			    }
-			    return _client;
-			    }
-			
-			    «FOR op : typeAnalysis.getOperations(service.interface)»
-				@Override
-				public «generateOperationSignature(service.interface, op)» {
-				    «IF op.hasResponseParameters»
-				    	return getClient().«op.name.toPascalCase»(«generateArguments(service.interface, op)»);
-				    «ELSE»
-				    	getClient().«op.name.toCamelCase»(«generateArguments(service.interface, op)»);
-				    «ENDIF»
+			namespace «parentName».Client
+			{
+				public class «service.name» : «service.interface.name» {
+				   private «service.interface.name» _client;
+				
+				    public Hello()
+				    {
+				         client = new «service.name»ClientFactory().Create();
+				    }
+				
+					 «FOR op : typeAnalysis.getOperations(service.interface)»
+					 	public async «generateAsyncOperationSignature(service.interface, op)» {
+					 	    «IF op.hasResponseParameters»
+					 	    	return await client.«op.name.toPascalCase»(«generateArguments(service.interface, op)»);
+					 	    «ELSE»
+					 	    	client.«op.name.toPascalCase»(«generateArguments(service.interface, op)»);
+					 	    «ENDIF»
+					 	}				 	
+					«ENDFOR»				 
 				}
-			
-			    «ENDFOR»
-			    @Override
-			    public void close() throws Exception {
-			    if (_client != null) {
-			        ((AutoCloseable)_client).close();
-			    }
-			    }
-			
 			}
 		'''
 	}
