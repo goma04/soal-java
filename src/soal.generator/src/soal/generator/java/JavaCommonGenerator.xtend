@@ -69,7 +69,7 @@ class JavaCommonGenerator extends JavaGeneratorBase {
 
         public interface «type.name»Factory {
             «type.name» create();
-        }
+       }
         '''
     }
 }

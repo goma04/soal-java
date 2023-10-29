@@ -30,7 +30,7 @@ class CsharpGeneratorBase extends GeneratorBase{
     
     def static String toFieldName(String identifier) {
         if (identifier === null || identifier.length == 0) return identifier;
-        return "_"+identifier.toCamelCase;
+        return identifier.toPascalCase;
     }
 
     def static String toGetterName(String identifier) {
@@ -126,20 +126,16 @@ class CsharpGeneratorBase extends GeneratorBase{
         else return '''«FOR param: op.requestParameters.parameters SEPARATOR ", "»«param.name.toCamelCase»«ENDFOR»'''
     }
 
-    def generateFieldsAndAccessors(Iterable<? extends Variable> fields) {
+    def generateProperties(Iterable<? extends Variable> fields) {
         '''
         «FOR field: fields»
-        «generateField(field.type, field.name ?: "result")»
-        «ENDFOR»
-
-        «FOR field: fields»
-        «generateAccessors(field.type, field.name ?: "result")»
-        «ENDFOR»
+        «generateProperty(field.type, field.name ?: "result")»
+        «ENDFOR»       
         '''
     }
 
-    def generateField(Type type, String name) {
-        '''private «generateTypeRef(type, false)» «name.toFieldName»;'''
+    def generateProperty(Type type, String name) {
+        '''public «generateTypeRef(type, false)» «name.toFieldName» { get; set; };'''
     }
 
     def generateAccessors(Type type, String name) {

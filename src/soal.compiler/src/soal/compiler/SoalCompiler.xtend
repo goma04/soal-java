@@ -34,6 +34,7 @@ import soal.model.SoalModelUtils
 import soal.generator.csharp.CsharpGeneratorConfiguration
 import soal.generator.csharp.CsharpProjectGenerator
 import soal.generator.csharp.CsharpRestServiceGenerator
+import soal.generator.csharp.CsharpCommonGenerator
 
 class SoalCompiler {
 	final Logger logger = Logger.getLogger(SoalCompiler)
@@ -48,6 +49,7 @@ class SoalCompiler {
 	EclipseProjectGenerator _eclipseGenerator
 	JavaMainGenerator _mainGenerator
 	JavaCommonGenerator _commonGenerator
+	CsharpCommonGenerator _csharpCommonGenerator
 	JavaClientGenerator _clientGenerator
 	JavaServiceGenerator _serviceGenerator
 	RestCommonGenerator _restCommonGenerator
@@ -148,6 +150,13 @@ class SoalCompiler {
 			_csharpRestServiceGenerator = new CsharpRestServiceGenerator(rootModel, _modelName, _configCsharp)
 		}
 		return _csharpRestServiceGenerator
+	}
+	
+	def getCsharpCommonGenerator(){
+		if(_csharpCommonGenerator === null){
+			_csharpCommonGenerator = new CsharpCommonGenerator(rootModel, _modelName, _configCsharp)
+		}
+		return _csharpCommonGenerator
 	}
 
 	def RootSoalModel readRootSoalModel(String path) throws IOException {
@@ -267,6 +276,7 @@ class SoalCompiler {
 
 		// common
 		projectPath = csharpProject(_modelName + ".Common", csharpGenerator.GenerateCommonCsproj, ProjectType.Common)
+		csharpSources(projectPath, csharpCommonGenerator.generateAll())
 
 		// client
 		projectPath = csharpProject(_modelName + ".Client", csharpGenerator.GenerateClientCsproj, ProjectType.Client)
