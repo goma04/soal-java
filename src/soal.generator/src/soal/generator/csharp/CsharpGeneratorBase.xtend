@@ -37,6 +37,11 @@ class CsharpGeneratorBase extends GeneratorBase{
         if (identifier === null || identifier.length == 0) return identifier;
         return "get"+identifier.toPascalCase;
     }
+    
+    def static String toPropertyName(String identifier) {
+    	if (identifier === null || identifier.length == 0) return identifier;
+    	return identifier.toPascalCase;
+    }
 
     def static String toSetterName(String identifier) {
         if (identifier === null || identifier.length == 0) return identifier;
