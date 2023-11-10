@@ -171,7 +171,7 @@ class CsharpRestServiceGenerator extends CsharpRestGeneratorBase {
 					«op.name»Return result = _service.«op.name.toPascalCase»(«generateToCommonArguments(service.interface, op)»);
 					«op.name»Response response = new «op.name»Response();
 					«FOR param: op.responseParameters.parameters»
-						response.«param.name.toSetterName»(result.«param.name.toGetterName»());
+						response.«param.name.toPropertyName»(result.«param.name.toGetterName»());
 					«ENDFOR»
 					return response;
 				«ENDIF»   

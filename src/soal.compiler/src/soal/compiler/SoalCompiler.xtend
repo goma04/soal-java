@@ -37,6 +37,7 @@ import soal.generator.csharp.CsharpRestServiceGenerator
 import soal.generator.csharp.CsharpCommonGenerator
 import soal.generator.csharp.CsharpMainGenerator
 import soal.generator.csharp.CsharpClientGenerator
+import soal.generator.csharp.CsharpRestCommonGenerator
 
 class SoalCompiler {
 	final Logger logger = Logger.getLogger(SoalCompiler)
@@ -52,6 +53,7 @@ class SoalCompiler {
 	JavaMainGenerator _mainGenerator
 	JavaCommonGenerator _commonGenerator
 	CsharpCommonGenerator _csharpCommonGenerator
+	CsharpRestCommonGenerator _csharpRestCommonGenerator
 	CsharpMainGenerator _csharpMainGenerator
 	CsharpClientGenerator _csharpClientGenerator
 	JavaClientGenerator _clientGenerator
@@ -176,6 +178,14 @@ class SoalCompiler {
 		}
 		return _csharpClientGenerator
 	}
+	
+	def getCsharpRestCommonGenerator(){
+		if(_csharpRestCommonGenerator === null){
+			_csharpRestCommonGenerator = new CsharpRestCommonGenerator(rootModel, _modelName, _configCsharp)
+		}
+		return _csharpRestCommonGenerator
+	}
+	
 
 	def RootSoalModel readRootSoalModel(String path) throws IOException {
 		val file = new File(path);
@@ -306,6 +316,7 @@ class SoalCompiler {
 
 		// rest.common
 		projectPath = csharpProject(_modelName + "Rest.Common", csharpGenerator.GenerateRestCommonCsproj, ProjectType.RestCommon)
+		csharpSources(projectPath, csharpRestCommonGenerator.generateAll())
 
 		// rest.client
 		projectPath = csharpProject(_modelName + "Rest.Client", csharpGenerator.GenerateRestClientCsproj, ProjectType.RestClient)

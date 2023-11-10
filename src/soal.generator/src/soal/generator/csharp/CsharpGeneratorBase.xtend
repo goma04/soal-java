@@ -43,11 +43,7 @@ class CsharpGeneratorBase extends GeneratorBase{
     	return identifier.toPascalCase;
     }
 
-    def static String toSetterName(String identifier) {
-        if (identifier === null || identifier.length == 0) return identifier;
-        return "set"+identifier.toPascalCase;
-    }
-
+   
     def static String toCamelCase(String identifier) {
         if (identifier === null || identifier.length == 0) return identifier;
         return identifier.substring(0, 1).toLowerCase+identifier.substring(1)
@@ -139,29 +135,10 @@ class CsharpGeneratorBase extends GeneratorBase{
     }
 
     def generateProperty(Type type, String name) {
-        '''public «generateTypeRef(type, false)» «name.toFieldName» { get; set; };'''
+        '''public «generateTypeRef(type, false)» «name.toFieldName» { get; set; }'''
     }
 
-    def generateAccessors(Type type, String name) {
-        '''
-        «IF type instanceof ArrayType»
-        public «generateTypeRef(type, false)» «name.toGetterName»() {
-            if («name.toFieldName» == null) «name.toFieldName» = new Array«generateTypeRef(type, false)»();
-            return «name.toFieldName»;
-        }
-
-        «ELSE»
-        public «generateTypeRef(type, false)» «name.toGetterName»() {
-            return «name.toFieldName»;
-        }
-
-        public void «name.toSetterName»(«generateTypeRef(type, false)» value) {
-            «name.toFieldName» = value;
-        }
-
-        «ENDIF»
-        '''
-    }
+    
 
     def static isCustomType(Type type) {
         return !(type instanceof BuiltInType)
