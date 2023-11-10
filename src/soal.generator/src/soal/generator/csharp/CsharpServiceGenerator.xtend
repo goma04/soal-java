@@ -45,8 +45,8 @@ class CsharpServiceGenerator extends CsharpGeneratorBase {
 						
 			namespace «parentName».Service
 			{
-				public class «service.name»ServiceFactory : «service.interface.name»Factory {
-			
+				public class «service.name»ServiceFactory : «service.interface.name»Factory 
+				{
 			       public «service.interface.name» Create() {
 			            return new «service.name»();
 			       }
