@@ -61,7 +61,7 @@ class CsharpProjectGenerator extends CsharpGeneratorBase {
     	Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "«parentName».Common", "«parentName».Common\«parentName».Common.csproj", "{«commonUuid»}"
     	EndProject
     	
-    	Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "«parentName».Main", ""«parentName».Main\"«parentName».Main.csproj", "{«mainUuid»}"
+    	Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "«parentName».Main", "«parentName».Main\«parentName».Main.csproj", "{«mainUuid»}"
     	EndProject
     	
     	Global

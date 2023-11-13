@@ -36,16 +36,12 @@ class CsharpRestServiceGenerator extends CsharpRestGeneratorBase {
 			
 			// Add services to the container.			
 			builder.Services.AddControllers();
-			builder.Services.AddSwaggerGen();
-			
+			«FOR service : services»
+			builder.Services.AddTransient<I«service.name», «service.name»Service>()
+			«ENDFOR»
 			
 			var app = builder.Build();
 			
-			if (app.Environment.IsDevelopment())
-			{
-			    app.UseSwagger();
-			    app.UseSwaggerUI();
-			}
 			
 			// Configure the HTTP request pipeline.
 			
@@ -77,11 +73,11 @@ class CsharpRestServiceGenerator extends CsharpRestGeneratorBase {
 			        }			        
 			        
 			        «FOR op : typeAnalysis.getOperations(service.interface)»
-			        	public «generateOperationSignature(service.interface, op)» {
+			        	public async «generateAsyncOperationSignature(service.interface, op)» {
 			        	    «IF op.hasResponseParameters»
-			        	    	return _servcie.«op.name.toPascalCase»(«generateArguments(service.interface, op)»);
+			        	    	return await _service.«op.name.toPascalCase»(«generateArguments(service.interface, op)»);
 			        	    «ELSE»
-			        	    	_servcie.«op.name.toPascalCase»(«generateArguments(service.interface, op)»);
+			        	    	await _servie.«op.name.toPascalCase»(«generateArguments(service.interface, op)»);
 			        	    «ENDIF»
 			        	}
 			        	
@@ -177,8 +173,8 @@ class CsharpRestServiceGenerator extends CsharpRestGeneratorBase {
 
 	def generatePostMethod(Operation op, Service service) {
 		'''
-			[HttpPost("/«op.name»")]
-			public ActionResult<«op.name»Response> «op.name.toPascalCase»([FromBody] «op.name»Request request) {
+			[HttpPost("«op.name»")]
+			public async Task<ActionResult<«op.name»Response>> «op.name.toPascalCase»([FromBody] «op.name»Request request) {
 				«IF op.hasRequestParameters»
 					«FOR param: op.requestParameters.parameters»
 						«generateTypeRef(param.type, false)» «param.name.toCamelCase» = request.«param.name.toPropertyName»;
@@ -188,7 +184,7 @@ class CsharpRestServiceGenerator extends CsharpRestGeneratorBase {
 				«IF !op.hasResponseParameters»
 					service.«op.name.toPascalCase»(«generateArguments(service.interface, op)»);
 				«ELSEIF op.hasSingleResponseParameter»
-					«IF op.singleReturnType.isCustomType»«parentName».Common.«ENDIF»«generateTypeRef(op.singleReturnType, false)» result = _service.«op.name.toPascalCase»(«generateToCommonArguments(service.interface, op)»);
+					«IF op.singleReturnType.isCustomType»«parentName».Common.«ENDIF»«generateTypeRef(op.singleReturnType, false)» result = await _service.«op.name.toPascalCase»(«generateToCommonArguments(service.interface, op)»);
 					«op.name»Response response = new «op.name»Response();
 					«IF op.singleReturnType.isCustomType»
 						response.Result = «generateTypeRef(op.singleReturnType, false)».FromCommon(result);
@@ -197,7 +193,7 @@ class CsharpRestServiceGenerator extends CsharpRestGeneratorBase {
 					«ENDIF»
 					return response;
 				«ELSE»
-					«op.name»Return result = _service.«op.name.toPascalCase»(«generateToCommonArguments(service.interface, op)»);
+					«op.name»Return result = await _service.«op.name.toPascalCase»(«generateToCommonArguments(service.interface, op)»);
 					«op.name»Response response = new «op.name»Response();
 					«FOR param: op.responseParameters.parameters»
 						response.«param.name.toPropertyName»(result.«param.name.toGetterName»());

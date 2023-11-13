@@ -23,7 +23,7 @@ class CsharpMainGenerator extends CsharpGeneratorBase {
 			«ENDFOR»		
 					
 			«FOR service : services»
-				«service.name» «service.name.toLowerCase» = new «service.name»()) 
+				«service.name» «service.name.toLowerCase» = new «service.name»();
 				// TODO: call service					
 			«ENDFOR»
 		'''

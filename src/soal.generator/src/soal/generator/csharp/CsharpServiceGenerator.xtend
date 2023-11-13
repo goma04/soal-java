@@ -30,7 +30,7 @@ class CsharpServiceGenerator extends CsharpGeneratorBase {
 			{
 				public class «service.name» : «service.interface.name» {
 				 «FOR op : typeAnalysis.getOperations(service.interface)»
-				 	public «generateAsyncOperationSignature(service.interface, op)» {
+				 	public async «generateAsyncOperationSignature(service.interface, op)» {
 				 	    throw new NotSupportedException("This operation is not implemented.");
 				 	}
 				 «ENDFOR»				
