@@ -58,8 +58,9 @@ class CsharpCommonGenerator extends CsharpGeneratorBase {
 			{
 				public interface «type.name» {
 				«FOR op : typeAnalysis.getOperations(type)»
-					«generateOperationSignature(type, op)»;
+					«generateAsyncOperationSignature(type, op)»;
 				«ENDFOR»
+				}
 			}
 		'''
 	}

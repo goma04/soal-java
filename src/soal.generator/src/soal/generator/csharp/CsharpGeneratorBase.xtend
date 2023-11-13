@@ -138,6 +138,9 @@ class CsharpGeneratorBase extends GeneratorBase{
         '''public «generateTypeRef(type, false)» «name.toFieldName» { get; set; }'''
     }
 
+	def static isEnumType(Type type) {
+        return (type instanceof EnumType)
+    }
     
 
     def static isCustomType(Type type) {

@@ -24,7 +24,7 @@ class CsharpClientGenerator extends CsharpGeneratorBase {
 
 	def generateClient(Service service) {
 		'''
-			using «parentName».Common
+			using «parentName».Common;
 			
 			
 			namespace «parentName».Client
@@ -32,17 +32,17 @@ class CsharpClientGenerator extends CsharpGeneratorBase {
 				public class «service.name» : «service.interface.name» {
 				   private «service.interface.name» _client;
 				
-				    public Hello()
-				    {
-				         client = new «service.name»ClientFactory().Create();
-				    }
+				     public Hello()
+				     {
+				         _client = new «service.name»ClientFactory().Create();
+				     }
 				
 					 «FOR op : typeAnalysis.getOperations(service.interface)»
 					 	public async «generateAsyncOperationSignature(service.interface, op)» {
 					 	    «IF op.hasResponseParameters»
-					 	    	return await client.«op.name.toPascalCase»(«generateArguments(service.interface, op)»);
+					 	    	return await _client.«op.name.toPascalCase»(«generateArguments(service.interface, op)»);
 					 	    «ELSE»
-					 	    	client.«op.name.toPascalCase»(«generateArguments(service.interface, op)»);
+					 	    	_client.«op.name.toPascalCase»(«generateArguments(service.interface, op)»);
 					 	    «ENDIF»
 					 	}				 	
 				«ENDFOR»				 
@@ -53,18 +53,16 @@ class CsharpClientGenerator extends CsharpGeneratorBase {
 
 	def generateClientFactory(Service service) {
 		'''
-			using «parentName».Common.«service.interface.name»;
-			using «parentName»Rest.Client.«service.name»Client;
+			using «parentName».Common;
+			using «parentName»Rest.Client;
 			
 			namespace «parentName».Client
 			{
 			    class «service.name»ClientFactory : «service.interface.name»Factory {
-			
-			    public «service.interface.name» Create() {
-			        return new «service.name»Client("http://localhost:8080");
-			    }
-			
-			}
+				    public «service.interface.name» Create() {
+				        return new «service.name»Client("http://localhost:8080");
+				    }
+				}
 			}
 			
 		'''

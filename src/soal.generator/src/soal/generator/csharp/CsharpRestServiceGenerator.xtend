@@ -103,9 +103,9 @@ class CsharpRestServiceGenerator extends CsharpRestGeneratorBase {
 			    [Route("api/[controller]")]
 			    public class «service.name»Controller
 			    {
-			        private I«service.name»Service _service;
+			        private «parentName».Common.I«service.name» _service;
 			
-			        public «service.name»Controller(I«service.name»Service service)
+			        public «service.name»Controller(«parentName».Common.I«service.name» service)
 			        {
 			            _service = service;
 			        }
@@ -135,7 +135,36 @@ class CsharpRestServiceGenerator extends CsharpRestGeneratorBase {
 	}
 
 	def generateGet_AllMethod() {
-		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+		/*'''
+			[HttpGet]
+			public ActionResult<GetAll«op.name»Response> «op.name.toPascalCase»([FromBody] «op.name»Request request) {
+				«IF op.hasRequestParameters»
+					«FOR param: op.requestParameters.parameters»
+						«generateTypeRef(param.type, false)» «param.name.toCamelCase» = request.«param.name.toPropertyName»;
+					«ENDFOR»
+				«ENDIF»	
+				
+				«IF !op.hasResponseParameters»
+					service.«op.name.toPascalCase»(«generateArguments(service.interface, op)»);
+				«ELSEIF op.hasSingleResponseParameter»
+					«IF op.singleReturnType.isCustomType»«parentName».Common.«ENDIF»«generateTypeRef(op.singleReturnType, false)» result = _service.«op.name.toPascalCase»(«generateToCommonArguments(service.interface, op)»);
+					«op.name»Response response = new «op.name»Response();
+					«IF op.singleReturnType.isCustomType»
+						response.Response = «generateTypeRef(op.singleReturnType, false)».FromCommon(result);
+					«ELSE»
+						response.Response = result;
+					«ENDIF»
+					return response;
+				«ELSE»
+					«op.name»Return result = _service.«op.name.toPascalCase»(«generateToCommonArguments(service.interface, op)»);
+					«op.name»Response response = new «op.name»Response();
+					«FOR param: op.responseParameters.parameters»
+						response.«param.name.toPropertyName»(result.«param.name.toGetterName»());
+					«ENDFOR»
+					return response;
+				«ENDIF»   
+			}			        	
+		'''*/
 	}
 
 	def generateGetMethod() {
@@ -162,9 +191,9 @@ class CsharpRestServiceGenerator extends CsharpRestGeneratorBase {
 					«IF op.singleReturnType.isCustomType»«parentName».Common.«ENDIF»«generateTypeRef(op.singleReturnType, false)» result = _service.«op.name.toPascalCase»(«generateToCommonArguments(service.interface, op)»);
 					«op.name»Response response = new «op.name»Response();
 					«IF op.singleReturnType.isCustomType»
-						response.Response = «generateTypeRef(op.singleReturnType, false)».FromCommon(result);
+						response.Result = «generateTypeRef(op.singleReturnType, false)».FromCommon(result);
 					«ELSE»
-						response.Response = result;
+						response.Result = result;
 					«ENDIF»
 					return response;
 				«ELSE»

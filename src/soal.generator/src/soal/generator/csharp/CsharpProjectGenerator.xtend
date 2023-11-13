@@ -2,13 +2,14 @@ package soal.generator.csharp
 
 
 import soal.model.RootSoalModel
+import java.util.UUID;
 
 class CsharpProjectGenerator extends CsharpGeneratorBase {
 	new (RootSoalModel model, String name, CsharpGeneratorConfiguration configuration) {
     	super(model, name, configuration)
     }
 	
-	def GenerateMainCsproj() {
+	def generateMainCsproj() {
 		'''
     	<Project Sdk="Microsoft.NET.Sdk">
     	
@@ -21,14 +22,91 @@ class CsharpProjectGenerator extends CsharpGeneratorBase {
     	  </PropertyGroup>
     	
     	  <ItemGroup>
-    	    <ProjectReference Include="..\«parentName».client\«parentName».client.csproj" />
+    	    <ProjectReference Include="..\«parentName».Client\«parentName».client.csproj" />
     	  </ItemGroup>
     	
     	</Project>
     	'''
 	}
 	
-	def GenerateCommonCsproj() {
+	def generateSolution() {
+		val restServiceUuid = UUID.randomUUID();
+		val serviceUuid = UUID.randomUUID();
+		val restClientUuid = UUID.randomUUID();
+		val restCommonUuid = UUID.randomUUID();
+		val clientUuid = UUID.randomUUID();
+		val commonUuid = UUID.randomUUID();
+		val mainUuid = UUID.randomUUID();
+		'''
+    	Microsoft Visual Studio Solution File, Format Version 12.00
+    	# Visual Studio Version 17
+    	VisualStudioVersion = 17.6.33815.320
+    	MinimumVisualStudioVersion = 10.0.40219.1
+    	
+    	Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "«parentName».Client", "«parentName».Client\«parentName».Client.csproj", "{«clientUuid»}"
+    	EndProject
+    	
+    	Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "«parentName»Rest.Service", "«parentName»Rest.Service\«parentName»Rest.Service.csproj", "{«restServiceUuid»}"
+    	EndProject
+    	
+    	Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "«parentName».Service", "«parentName».Service\«parentName».Service.csproj", "{«serviceUuid»}"
+    	EndProject
+    	
+    	Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "«parentName»Rest.Client", "«parentName»Rest.Client\«parentName»Rest.Client.csproj", "{«restClientUuid»}"
+    	EndProject
+    	    	
+    	Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "«parentName»Rest.Common", "«parentName»Rest.Common\«parentName»Rest.Common.csproj", "{«restCommonUuid»}"
+    	EndProject
+    	
+    	Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "«parentName».Common", "«parentName».Common\«parentName».Common.csproj", "{«commonUuid»}"
+    	EndProject
+    	
+    	Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "«parentName».Main", ""«parentName».Main\"«parentName».Main.csproj", "{«mainUuid»}"
+    	EndProject
+    	
+    	Global
+    	    GlobalSection(SolutionConfigurationPlatforms) = preSolution
+    	        Debug|Any CPU = Debug|Any CPU
+    	        Release|Any CPU = Release|Any CPU
+    	    EndGlobalSection
+    	    GlobalSection(ProjectConfigurationPlatforms) = postSolution
+    	        {«clientUuid»}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+    	        {«clientUuid»}.Debug|Any CPU.Build.0 = Debug|Any CPU
+    	        {«clientUuid»}.Release|Any CPU.ActiveCfg = Release|Any CPU
+    	        {«clientUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«restServiceUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«restServiceUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«restServiceUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«restServiceUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«serviceUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«serviceUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«serviceUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«serviceUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«restClientUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«restClientUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«restClientUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«restClientUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«restCommonUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«restCommonUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«restCommonUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«restCommonUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«commonUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«commonUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«commonUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«commonUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«mainUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«mainUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«mainUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	        {«mainUuid»}.Release|Any CPU.Build.0 = Release|Any CPU
+    	    EndGlobalSection
+    	    GlobalSection(SolutionProperties) = preSolution
+    	        HideSolutionNode = FALSE
+    	    EndGlobalSection
+    	EndGlobal
+    	'''
+	}
+	
+	def generateCommonCsproj() {
 		'''
     	<Project Sdk="Microsoft.NET.Sdk">
     	
@@ -42,7 +120,7 @@ class CsharpProjectGenerator extends CsharpGeneratorBase {
     	'''
 	}
 	
-	def GenerateClientCsproj() {
+	def generateClientCsproj() {
 		'''
     	<Project Sdk="Microsoft.NET.Sdk">
     	
@@ -53,15 +131,15 @@ class CsharpProjectGenerator extends CsharpGeneratorBase {
     	  </PropertyGroup>
     	
     	  <ItemGroup>
-    	    <ProjectReference Include="..\«parentName».common\«parentName».common.csproj" />
-    	    <ProjectReference Include="..\«parentName».rest.client\«parentName».rest.client.csproj" />
+    	    <ProjectReference Include="..\«parentName».Common\«parentName».Common.csproj" />
+    	    <ProjectReference Include="..\«parentName»Rest.Client\«parentName»Rest.Client.csproj" />
     	  </ItemGroup>
     	
     	</Project>
     	'''
 	}
 	
-	def GenerateServiceCsproj() {
+	def generateServiceCsproj() {
 		'''
     	<Project Sdk="Microsoft.NET.Sdk">
     	
@@ -72,14 +150,14 @@ class CsharpProjectGenerator extends CsharpGeneratorBase {
     	  </PropertyGroup>
     	
     	  <ItemGroup>
-    	    <ProjectReference Include="..\«parentName».common\«parentName».common.csproj" />
+    	    <ProjectReference Include="..\«parentName».Common\«parentName».Common.csproj" />
     	  </ItemGroup>
     	
     	</Project>
     	'''
 	}
 	
-	def GenerateRestCommonCsproj() {
+	def generateRestCommonCsproj() {
 		'''
     	<Project Sdk="Microsoft.NET.Sdk">
     	
@@ -90,7 +168,7 @@ class CsharpProjectGenerator extends CsharpGeneratorBase {
     	  </PropertyGroup>
     	
     	  <ItemGroup>
-    	    <ProjectReference Include="..\«parentName».service\«parentName».service.csproj" />
+    	    <ProjectReference Include="..\«parentName».Service\«parentName».Service.csproj" />
     	  </ItemGroup>
     	
     	</Project>
@@ -98,7 +176,7 @@ class CsharpProjectGenerator extends CsharpGeneratorBase {
     	'''
 	}
 	
-	def GenerateRestServiceCsproj() {
+	def generateRestServiceCsproj() {
 		'''
     	<Project Sdk="Microsoft.NET.Sdk.Web">
     	
@@ -110,9 +188,9 @@ class CsharpProjectGenerator extends CsharpGeneratorBase {
     	  </PropertyGroup>
     	
     	  <ItemGroup>
-    	    <ProjectReference Include="..\«parentName».common\«parentName».common.csproj" />
-    	    <ProjectReference Include="..\«parentName».rest.common\«parentName».rest.common.csproj" />
-    	    <ProjectReference Include="..\«parentName».service\«parentName».service.csproj" />
+    	    <ProjectReference Include="..\«parentName».Common\«parentName».Common.csproj" />
+    	    <ProjectReference Include="..\«parentName»Rest.Common\«parentName»Rest.Common.csproj" />
+    	    <ProjectReference Include="..\«parentName».Service\«parentName».Service.csproj" />
     	  </ItemGroup>
     	
     	</Project>
@@ -120,7 +198,7 @@ class CsharpProjectGenerator extends CsharpGeneratorBase {
     	'''
 	}
 	
-	def GenerateRestClientCsproj() {
+	def generateRestClientCsproj() {
 		'''
     	<Project Sdk="Microsoft.NET.Sdk">
     	
@@ -131,8 +209,8 @@ class CsharpProjectGenerator extends CsharpGeneratorBase {
     	  </PropertyGroup>
     	
     	  <ItemGroup>
-    	    <ProjectReference Include="..\«parentName».common\«parentName».common.csproj" />
-    	    <ProjectReference Include="..\«parentName».rest.common\«parentName».rest.common.csproj" />
+    	    <ProjectReference Include="..\«parentName».Common\«parentName».Common.csproj" />
+    	    <ProjectReference Include="..\«parentName»Rest.Common\«parentName»Rest.Common.csproj" />
     	  </ItemGroup>
     	
     	</Project>

@@ -40,7 +40,7 @@ class CsharpRestCommonGenerator extends CsharpGeneratorBase {
 		'''
 			using System.Text.Json.Serialization;
 			
-			namespace «parentName».Common
+			namespace «parentName»Rest.Common
 			{
 				[JsonConverter(typeof(JsonStringEnumConverter))]
 				public enum «type.name» {
@@ -54,8 +54,21 @@ class CsharpRestCommonGenerator extends CsharpGeneratorBase {
 				            switch (value)
 				            {
 				            	«FOR lit : type.literals»
-				            		case «type.name».«lit.name»:
-				            			return «parentName».Common.«type.name».«lit.name»;
+				            		case «type.name».«lit.name.toUpperCase»:
+				            			return «parentName».Common.«type.name».«lit.name.toUpperCase»;
+				            	«ENDFOR»
+				            	default:
+				            	    throw new ArgumentException("Invalid enum value");
+				            }
+				        }
+				
+						public static «type.name»  FromCommon(this «parentName».Common.«type.name» value)
+				        {
+				            switch (value)
+				            {
+				            	«FOR lit : type.literals»
+				            		case «parentName».Common.«type.name».«lit.name.toUpperCase»:
+				            			return «type.name».«lit.name.toUpperCase»;
 				            	«ENDFOR»
 				            	default:
 				            	    throw new ArgumentException("Invalid enum value");
@@ -68,9 +81,9 @@ class CsharpRestCommonGenerator extends CsharpGeneratorBase {
 
 	private def generateStructType(StructType type) {
 		'''
-			namespace «parentName».Common
+			namespace «parentName»Rest.Common
 			{
-				public class «type.name»«IF type.baseType !== null» extends «generateTypeRef(type.baseType, false)»«ENDIF» 
+				public class «type.name»«IF type.baseType !== null» extends «generateTypeRef(type.baseType, false)»«ENDIF» {
 					«generateProperties(type.fields)»
 				
 					public «parentName».Common.«type.name» ToCommon() {
@@ -79,11 +92,12 @@ class CsharpRestCommonGenerator extends CsharpGeneratorBase {
 					    	«IF field.type instanceof ArrayType»
 					    		result.«field.name.toPropertyName».AddRange(«field.name.toPropertyName»);
 					    	«ELSE»
-					    		result.«field.name.toPropertyName»(«field.name.toPropertyName»);
+					    		result.«field.name.toPropertyName» = «field.name.toPropertyName»;
 					    	«ENDIF»
 					    «ENDFOR»
 					    return result;
 						}
+						
 					public static «type.name» FromCommon(«parentName».Common.«type.name» value) {
 					   if (value == null) return null;
 					   «type.name» result = new «type.name»();
@@ -91,18 +105,19 @@ class CsharpRestCommonGenerator extends CsharpGeneratorBase {
 					   	«IF field.type instanceof ArrayType»
 					   		result.«field.name.toPropertyName».AddRange(value.«field.name.toPropertyName»);
 					   	«ELSE»
-					   		result.«field.name.toPropertyName»(value.«field.name.toPropertyName»);
+					   		result.«field.name.toPropertyName» = value.«field.name.toPropertyName»;
 					   	«ENDIF»
 					   «ENDFOR»
 					   return result;
 					}
+				}
 			}
 		'''
 	}
 
 	private def generateOperationRequest(Interface intf, Operation op) {
 		'''
-			namespace «parentName».Common
+			namespace «parentName»Rest.Common
 			{
 				public class «op.name»Request {
 					«IF op.hasRequestParameters»
@@ -115,7 +130,7 @@ class CsharpRestCommonGenerator extends CsharpGeneratorBase {
 
 	private def generateOperationResponse(Interface intf, Operation op) {
 		'''
-			namespace «parentName».Common
+			namespace «parentName»Rest.Common
 			{
 				public class «op.name»Response {
 					«IF op.hasResponseParameters»

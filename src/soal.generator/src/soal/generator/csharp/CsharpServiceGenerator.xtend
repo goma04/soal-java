@@ -24,14 +24,14 @@ class CsharpServiceGenerator extends CsharpGeneratorBase {
 
 	def generateService(Service service) {
 		'''
-			using «parentName».Common
+			using «parentName».Common;
 			
 			namespace «parentName».Service
 			{
 				public class «service.name» : «service.interface.name» {
 				 «FOR op : typeAnalysis.getOperations(service.interface)»
-				 	public «generateOperationSignature(service.interface, op)» {
-				 	    throw new UnsupportedOperationException("This operation is not implemented.");
+				 	public «generateAsyncOperationSignature(service.interface, op)» {
+				 	    throw new NotSupportedException("This operation is not implemented.");
 				 	}
 				 «ENDFOR»				
 				} 				
@@ -41,7 +41,7 @@ class CsharpServiceGenerator extends CsharpGeneratorBase {
 
 	def generateServiceFactory(Service service) {
 		'''
-			using «parentName».Common
+			using «parentName».Common;
 						
 			namespace «parentName».Service
 			{

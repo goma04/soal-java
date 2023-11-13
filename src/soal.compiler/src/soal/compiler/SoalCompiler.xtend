@@ -66,7 +66,7 @@ class SoalCompiler {
 	RestClientGenerator _restClientGenerator
 	RestServiceGenerator _restServiceGenerator
 	CsharpRestServiceGenerator _csharpRestServiceGenerator
-	CsharpProjectGenerator _csharpGenerator
+	CsharpProjectGenerator _csharpProjectGenerator
 
 	new(String inputPath, String outputPath) {
 		_inputPath = inputPath
@@ -92,11 +92,11 @@ class SoalCompiler {
 		return _mavenGenerator
 	}
 
-	def getCsharpGenerator() {
-		if (_csharpGenerator === null) {
-			_csharpGenerator = new CsharpProjectGenerator(rootModel, _modelName, _configCsharp)
+	def getCsharpProjectGenerator() {
+		if (_csharpProjectGenerator === null) {
+			_csharpProjectGenerator = new CsharpProjectGenerator(rootModel, _modelName, _configCsharp)
 		}
-		return _csharpGenerator
+		return _csharpProjectGenerator
 	}
 
 	def getEclipseGenerator() {
@@ -315,35 +315,38 @@ class SoalCompiler {
 		directory(_outputPath)
 
 		var projectPath = _outputPath
+		
+		//solution file
+		save(projectPath, _modelName + ".sln", csharpProjectGenerator.generateSolution(), false)
 
 		// main
-		projectPath = csharpProject(_modelName + ".Main", csharpGenerator.GenerateMainCsproj, ProjectType.Main)
+		projectPath = csharpProject(_modelName + ".Main", csharpProjectGenerator.generateMainCsproj, ProjectType.Main)
 		csharpSources(projectPath, csharpMainGenerator.generateAll())
 
 		// common
-		projectPath = csharpProject(_modelName + ".Common", csharpGenerator.GenerateCommonCsproj, ProjectType.Common)
+		projectPath = csharpProject(_modelName + ".Common", csharpProjectGenerator.generateCommonCsproj, ProjectType.Common)
 		csharpSources(projectPath, csharpCommonGenerator.generateAll())
 
 		// client
-		projectPath = csharpProject(_modelName + ".Client", csharpGenerator.GenerateClientCsproj, ProjectType.Client)
+		projectPath = csharpProject(_modelName + ".Client", csharpProjectGenerator.generateClientCsproj, ProjectType.Client)
 		csharpSources(projectPath, csharpClientGenerator.generateAll())
 
 		// service
-		projectPath = csharpProject(_modelName + ".Service", csharpGenerator.GenerateServiceCsproj, ProjectType.Service)
+		projectPath = csharpProject(_modelName + ".Service", csharpProjectGenerator.generateServiceCsproj, ProjectType.Service)
 		csharpSources(projectPath, csharpServiceGenerator.generateAll())
 
 		// rest.common
-		projectPath = csharpProject(_modelName + "Rest.Common", csharpGenerator.GenerateRestCommonCsproj,
+		projectPath = csharpProject(_modelName + "Rest.Common", csharpProjectGenerator.generateRestCommonCsproj,
 			ProjectType.RestCommon)
 		csharpSources(projectPath, csharpRestCommonGenerator.generateAll())
 
 		// rest.client
-		projectPath = csharpProject(_modelName + "Rest.Client", csharpGenerator.GenerateRestClientCsproj,
+		projectPath = csharpProject(_modelName + "Rest.Client", csharpProjectGenerator.generateRestClientCsproj,
 			ProjectType.RestClient)
 		csharpSources(projectPath, csharpRestClientGenerator.generateAll())
 
 		// rest.service
-		projectPath = csharpProject(_modelName + "Rest.Service", csharpGenerator.GenerateRestServiceCsproj,
+		projectPath = csharpProject(_modelName + "Rest.Service", csharpProjectGenerator.generateRestServiceCsproj,
 			ProjectType.RestService)
 		csharpSources(projectPath, csharpRestServiceGenerator.generateAll())
 
@@ -367,7 +370,7 @@ class SoalCompiler {
 			directory(projectPath, "Properties")
 			directory(projectPath, "Controllers")
 		}
-		save(projectPath, ".csproj", csprojXml, false)
+		save(projectPath, projectName + ".csproj", csprojXml, false)
 		return projectPath
 	}
 

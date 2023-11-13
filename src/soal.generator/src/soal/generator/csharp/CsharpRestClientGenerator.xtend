@@ -22,19 +22,18 @@ class CsharpRestClientGenerator extends CsharpGeneratorBase {
 	def generateClient(Service service) {
 		'''        
 			using «parentName».Common;
-			using «parentName».Rest.Common;
 			using System.Net.Http.Headers;
 			using System.Text;
 			using System.Text.Json;
 			
-			namespace «parentName».Service
+			namespace «parentName»Rest.Client
 			{
 				 public class «service.name»Client : «service.interface.name» {
 				    private string _baseUri;
 				    private HttpClient _client;
 				
-				    public «service.name»Client(String baseUrl) {
-				       _client = new HttpClient()
+				    public «service.name»Client(String baseUri) {
+				    	_client = new HttpClient()
 				       {
 				          BaseAddress = new Uri(baseUri),
 				       };
@@ -47,13 +46,17 @@ class CsharpRestClientGenerator extends CsharpGeneratorBase {
 			
 			     «FOR op : typeAnalysis.getOperations(service.interface)»
 			     	public async «generateAsyncOperationSignature(service.interface, op)» {
-			     	    «op.name»Request __request = new «op.name»Request();
+			     	    «parentName»Rest.Common.«op.name»Request __request = new «parentName»Rest.Common.«op.name»Request();
 			     	    «IF op.hasRequestParameters»
 			     	    	«FOR param: op.requestParameters.parameters»
 			     	    		«IF param.type.isCustomType»
-			     	    			__request.«param.name.toPropertyName» = «parentName».Rest.Common.«generateTypeRef(param.type, false)».FromCommon(«param.name.toPascalCase»);
+			     	    			«IF param.type.isEnumType»
+			     	    			    __request.«param.name.toPropertyName» = «parentName»Rest.Common.Extensions.FromCommon(«param.name»);	     	    			
+			     	    			«ELSE»
+			     	    				__request.«param.name.toPropertyName» = «parentName»Rest.Common.«generateTypeRef(param.type, false)».FromCommon(«param.name»);	
+			     	    			«ENDIF»
 			     	    		«ELSE»
-			     	    			__request.«param.name.toPropertyName» = «param.name.toPropertyName»;
+			     	    			__request.«param.name.toPropertyName» = «param.name»;
 			     	    		«ENDIF»
 			     	    	«ENDFOR»
 			     	    «ENDIF»
@@ -62,17 +65,17 @@ class CsharpRestClientGenerator extends CsharpGeneratorBase {
 			     	    HttpResponseMessage __response = await _client.PostAsync($"{_baseUri}/«service.name»/«op.name»", content);
 			     	    string responseBody = await __response.Content.ReadAsStringAsync();
 			     	    var options = new JsonSerializerOptions
-			     	          {
-			     	             PropertyNameCaseInsensitive = true
-			     	          };		     	                
+			     	     {
+			     	        PropertyNameCaseInsensitive = true
+			     	     };		     	                
 			     	               
 			     	    «IF !op.hasResponseParameters»
 			     	    «ELSEIF op.hasSingleResponseParameter»
 			     	    	«IF op.singleReturnType.isCustomType»
-			     	    		«parentName».Rest.Common.«generateTypeRef(op.singleReturnType, false)» __result = JsonSerializer.Deserialize<«op.name»Response>(responseBody, options).Response;
+			     	    		«parentName»Rest.Common.«generateTypeRef(op.singleReturnType, false)» __result = JsonSerializer.Deserialize<«parentName»Rest.Common.«op.name»Response>(responseBody, options).Result;
 			     	    		return __result.ToCommon();
 			     	    	«ELSE»
-			     	    		«generateTypeRef(op.singleReturnType, false)» __result = JsonSerializer.Deserialize<«op.name»Response>(responseBody, options).Response;
+			     	    		«generateTypeRef(op.singleReturnType, false)» __result = JsonSerializer.Deserialize<«parentName»Rest.Common.«op.name»Response>(responseBody, options).Result;
 			     	    		return __result;
 			     	    	«ENDIF»
 			     	    «ELSE»
