@@ -318,7 +318,17 @@ class SoalCompiler {
 		
 		//solution file
 		save(projectPath, _modelName + ".sln", csharpProjectGenerator.generateSolution(), false)
-
+		
+		//appSettings, launchSettings files
+		projectPath = directory(_outputPath, _modelName + "Rest.Service")
+		save(projectPath, "appsettings.json", csharpProjectGenerator.generateAppsettingsDevelopmentJson, true)
+		
+		projectPath = directory(_outputPath, _modelName + "Rest.Service")
+		save(projectPath, "appsettigs.development.json", csharpProjectGenerator.generateAppsettingsJson, true)
+		
+		projectPath = directory(_outputPath + "/Rest.Service", "Properties")
+		save(projectPath,  "launchsettings.json", csharpProjectGenerator.generateLaunchSettingsJson, true)
+		
 		// main
 		projectPath = csharpProject(_modelName + ".Main", csharpProjectGenerator.generateMainCsproj, ProjectType.Main)
 		csharpSources(projectPath, csharpMainGenerator.generateAll())
@@ -385,7 +395,6 @@ class SoalCompiler {
 	}
 
 	def csharpSources(String projectPath, List<GeneratedFile> files) {
-		val path = new File(projectPath, "test")
 		for (file : files) {
 			logger.info("info-" + file.directory)
 			val packagePath = new File(projectPath).canonicalPath

@@ -7,6 +7,7 @@ enum ProjectType {
 	Service,
 	Client,
 	Common,
-	Main
+	Main,
+	Other
 	
 }

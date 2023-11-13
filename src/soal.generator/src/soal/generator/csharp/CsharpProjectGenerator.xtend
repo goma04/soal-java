@@ -217,4 +217,78 @@ class CsharpProjectGenerator extends CsharpGeneratorBase {
     	'''
 	}
 	
+	def generateAppsettingsJson(){
+		'''
+    	{
+    	  "Logging": {
+    	    "LogLevel": {
+    	      "Default": "Information",
+    	      "Microsoft.AspNetCore": "Warning"
+    	    }
+    	  },
+    	  "AllowedHosts": "*"
+    	}
+    	'''
+	}
+	
+	def generateAppsettingsDevelopmentJson(){
+		'''
+    	{
+    	  "Logging": {
+    	    "LogLevel": {
+    	      "Default": "Information",
+    	      "Microsoft.AspNetCore": "Warning"
+    	    }
+    	  }
+    	}
+    	'''
+	}
+	
+	def generateLaunchSettingsJson(){
+		'''
+    	{
+    	  "$schema": "https://json.schemastore.org/launchsettings.json",
+    	  "iisSettings": {
+    	    "windowsAuthentication": false,
+    	    "anonymousAuthentication": true,
+    	    "iisExpress": {
+    	      "applicationUrl": "http://localhost:64855",
+    	      "sslPort": 44371
+    	    }
+    	  },
+    	  "profiles": {
+    	    "http": {
+    	      "commandName": "Project",
+    	      "dotnetRunMessages": true,
+    	      "launchBrowser": true,
+    	      "launchUrl": "weatherforecast",
+    	      "applicationUrl": "http://localhost:5276",
+    	      "environmentVariables": {
+    	        "ASPNETCORE_ENVIRONMENT": "Development"
+    	      }
+    	    },
+    	    "https": {
+    	      "commandName": "Project",
+    	      "dotnetRunMessages": true,
+    	      "launchBrowser": true,
+    	      "launchUrl": "weatherforecast",
+    	      "applicationUrl": "https://localhost:7164;http://localhost:5276",
+    	      "environmentVariables": {
+    	        "ASPNETCORE_ENVIRONMENT": "Development"
+    	      }
+    	    },
+    	    "IIS Express": {
+    	      "commandName": "IISExpress",
+    	      "launchBrowser": true,
+    	      "launchUrl": "weatherforecast",
+    	      "environmentVariables": {
+    	        "ASPNETCORE_ENVIRONMENT": "Development"
+    	      }
+    	    }
+    	  }
+    	}
+
+    	'''
+	}
+	
 }
